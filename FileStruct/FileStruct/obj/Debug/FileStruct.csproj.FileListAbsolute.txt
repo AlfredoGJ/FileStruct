@@ -1,0 +1,9 @@
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.exe.config
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.exe
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.pdb
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csprojResolveAssemblyReference.cache
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.Form1.resources
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.Properties.Resources.resources
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csproj.GenerateResource.Cache
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.exe
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.pdb
