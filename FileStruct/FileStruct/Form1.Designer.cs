@@ -45,7 +45,7 @@
             this.textBox1.Location = new System.Drawing.Point(61, 96);
             this.textBox1.MaxLength = 30;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(137, 20);
+            this.textBox1.Size = new System.Drawing.Size(168, 20);
             this.textBox1.TabIndex = 0;
             // 
             // label1
@@ -59,13 +59,16 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(12, 128);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(472, 211);
+            this.dataGridView1.Size = new System.Drawing.Size(607, 222);
             this.dataGridView1.TabIndex = 2;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
+            this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
             // button1
             // 
@@ -81,8 +84,9 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(61, 40);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.Size = new System.Drawing.Size(168, 20);
             this.textBox2.TabIndex = 4;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label2
             // 
@@ -107,9 +111,9 @@
             // 
             this.button3.Location = new System.Drawing.Point(325, 36);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(97, 27);
+            this.button3.Size = new System.Drawing.Size(97, 37);
             this.button3.TabIndex = 7;
-            this.button3.Text = "Working Directory";
+            this.button3.Text = "Select Working Directory";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -127,7 +131,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(496, 351);
+            this.ClientSize = new System.Drawing.Size(631, 362);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);

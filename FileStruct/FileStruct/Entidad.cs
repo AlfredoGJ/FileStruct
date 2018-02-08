@@ -15,7 +15,7 @@ namespace FileStruct
         private Int64 ap_atributos=-1;
         private Int64 ap_datos=-1;
         private Int64 ap_siguiente=-1;
-        public string Nombre { get => new string(nombre);}
+        public string Nombre { get => new string(nombre).Trim();}
         public Int64 Pos { get => posicion; set => posicion = value; }
         public Int64 ApAtr { get => ap_atributos; set => ap_atributos = value; }
         public Int64 ApData { get => ap_datos; set => ap_datos = value; }
@@ -28,6 +28,16 @@ namespace FileStruct
         {
             nombre= new char[30];
          
+        }
+        public void SetName(string Name)
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                if (i < Name.Count())
+                    this.nombre[i] = Name[i];
+                else
+                    this.nombre[i] = ' ';
+            }
         }
 
         public void WriteAt(FileStream Stream,Int64 Pos)
@@ -65,14 +75,7 @@ namespace FileStruct
         {
 
             Entidad E = new Entidad();
-
-            for (int i = 0; i < 30; i++)
-            {
-                if (i < Name.Count())
-                    E.nombre[i] = Name[i];
-                else
-                    E.nombre[i] = ' ';
-            }
+            E.SetName(Name);
             E.posicion= -1;
             E.ApAtr = -1;
             E.ApData = -1;
