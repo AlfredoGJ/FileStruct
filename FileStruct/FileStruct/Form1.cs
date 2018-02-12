@@ -13,13 +13,15 @@ namespace FileStruct
 {
     public partial class Form1 : Form
     {
-        private string CurreentFileName;
+       
+        private DBFile currentFile; 
         private string EditingCellName;
-        private string ProjectName;
+        private string projectName;
         public Form1()
         {
             InitializeComponent();
-            
+            button5.Enabled = false;
+           
             dataGridView1.Columns.Add("Nombre","Nombre");
             dataGridView1.Columns.Add("Posicion", "Posicion");
             dataGridView1.Columns.Add("ap_atributos", "ap_atributos");
@@ -55,6 +57,8 @@ namespace FileStruct
             {
                 OpenFile();
                 EnableFileManipulation();
+                DumpCurrentFileToScreen();
+
             }
            
         }
@@ -64,70 +68,57 @@ namespace FileStruct
 
             if (Directory.Exists(Directory.GetCurrentDirectory()+"\\"+ textBox2.Text))
             {
-                ProjectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
-                CurreentFileName = ProjectName+ "\\Diccionario.bin";
-               
-                FileStream Stream = File.OpenRead(CurreentFileName);
-                using (BinaryReader Reader = new BinaryReader(Stream))
-                {
-                    DumpToScreen(Stream);
-                    Reader.Close();
-                }
+                projectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
+                //CurreentFileName = ProjectName+ "\\Diccionario.bin";
+                currentFile = new DBFile(projectName);
+                DumpCurrentFileToScreen();
+                             
             }
 
             else
             {
                 Directory.CreateDirectory(Directory.GetCurrentDirectory()+"\\"+textBox2.Text);
-                ProjectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
-                CurreentFileName = ProjectName + "\\Diccionario.bin";
-                FileStream F = File.Create(CurreentFileName);
-                    F.Close();
-                    F.Dispose();
+                projectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
+                //CurreentFileName = ProjectName + "\\Diccionario.bin";
+                currentFile = new DBFile(projectName);
 
-                    using (BinaryWriter Writer = new BinaryWriter(File.OpenWrite(CurreentFileName)))
-                    {
-                        Writer.Write((Int64)(-1));
-                        Writer.Close();
-                    }
              
                 
             }
 
 
         }
-        private void DumpToScreen(FileStream Stream)
-        {
-            Stream.Seek(0, SeekOrigin.Begin);
-            BinaryReader Reader = new BinaryReader(Stream);
 
-            Int64 ApAux = Reader.ReadInt64();
-            while (ApAux!=-1)
+     
+        private void DumpCurrentFileToScreen()
+        {
+            dataGridView1.Rows.Clear();
+            comboBox1.Items.Clear();
+            List<object[]> Entidades = currentFile.ReadEntidades();
+            foreach (object[] o in Entidades)
             {
-                Entidad EAux = Entidad.FetchAt(Stream, ApAux);
-                object[] reg = {EAux.Nombre,EAux.Pos,EAux.ApAtr,EAux.ApData,EAux.ApNext };
-                dataGridView1.Rows.Add(reg);
-                ApAux = EAux.ApNext;
-              
+                dataGridView1.Rows.Add(o);
+                comboBox1.Items.Add(o[0]);
             }
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrEmpty(CurreentFileName))
+            if ( (!string.IsNullOrEmpty(textBox1.Text))&& (currentFile != null) )
             {
-                using (FileStream Stream = File.Open(CurreentFileName,FileMode.Open))
+                if (currentFile.FindEntidad(textBox1.Text) != -1)
+                    MessageBox.Show("Ya existe una una entidad con el nombre " + textBox1.Text + " En el archivo ");
+                else
                 {
-                    if (FindEntidad(Stream, textBox1.Text) != -1)
-                        MessageBox.Show("Ya existe una una entidad con el nombre " + textBox1.Text + " En el archivo ");
-                    else
-                        InsertEntidad(Stream,Entidad.CreateNew(textBox1.Text));
-                    
-                }
+                    currentFile.InsertEntidad(Entidad.CreateNew(textBox1.Text));
                    
-            }
-                
+                }
+                    
 
-
+                DumpCurrentFileToScreen();
+                                                                            
+            }                
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -138,8 +129,8 @@ namespace FileStruct
                 Directory.SetCurrentDirectory(Dialog.SelectedPath);
                 DisableFileManipulation();
                 dataGridView1.Rows.Clear();
-                CurreentFileName = string.Empty;
-                ProjectName = string.Empty;
+                currentFile = null;
+                projectName = string.Empty;
                 textBox2.Text = "";
                 
             }
@@ -150,181 +141,33 @@ namespace FileStruct
             return Stream.Length;
             
         }
-        private void InsertEntidad( FileStream Stream, Entidad entidad )
-        {
-                Stream.Seek(0, SeekOrigin.Begin);
-                using (BinaryReader Reader = new BinaryReader(Stream))
-                {
-                    Int64 Cab = Reader.ReadInt64();
-                    if (Cab == -1)
-                    {
-                       
-                       // entidad.WriteAt(Stream,8);///Position waas 8, now it is stream.lenght
-
-                        //Header update
-                        Stream.Seek(0, SeekOrigin.Begin);
-                        BinaryWriter Writer = new BinaryWriter(Stream);                        
-                        Writer.Write((Int64)Stream.Length);
-
-                        entidad.WriteAt(Stream, Stream.Length);///Position waas 8, now it is stream.lenght
-                }
-                else
-                    {
-                        Int64 APEntidad = Cab;
-                        Entidad LastEnt = Entidad.FetchAt(Stream, APEntidad);
-                        while (LastEnt.ApNext !=-1)
-                        {
-                            LastEnt = Entidad.FetchAt(Stream, APEntidad);
-                            APEntidad = LastEnt.ApNext;
-                        }
-
-                        LastEnt.ApNext = Stream.Length;
-                        LastEnt.WriteAt(Stream,LastEnt.Pos);
-                        entidad.WriteAt(Stream, Stream.Length);
-
-
-
-                    }
-                    dataGridView1.Rows.Clear();
-                    DumpToScreen(Stream);
-                       
-                    Reader.Close();
-                }
-            if (!File.Exists(ProjectName + "\\" + entidad.Nombre))
-                File.Create(ProjectName+"\\"+entidad.Nombre).Close();
-            
-        }
-        private Int64 FindEntidad(FileStream Stream,string EntidadName)
-        {
-            Stream.Seek(0,SeekOrigin.Begin);
-            BinaryReader Reader =  new BinaryReader(Stream);
-            Int64 AuxPtr = Reader.ReadInt64();
-            while (AuxPtr != -1)
-            {
-                Entidad E = Entidad.FetchAt(Stream,AuxPtr);
-                if (E.Nombre == EntidadName)
-                    return E.Pos;
-                AuxPtr = E.ApNext;
-            }
-            return AuxPtr;
-        }
-        private void DeleteEntidad(FileStream Stream, string EntidadName)
-        {
-            if (File.Exists(ProjectName + "\\" + EntidadName))
-            {
-                File.Delete(ProjectName + "\\" + EntidadName);
-                MessageBox.Show(ProjectName + "\\" + EntidadName);
-            }
-
-            else
-                MessageBox.Show("El archivo no existe");
-
-
-            BinaryReader Reader = new BinaryReader(Stream);
-            Stream.Seek(0, SeekOrigin.Begin);
-            Int64 AuxPtr = Reader.ReadInt64();
-            Int64 Cab = AuxPtr;
-
-
-
-            while (AuxPtr != -1)
-            {
-                Entidad E = Entidad.FetchAt(Stream, AuxPtr);
-
-                if (E.ApNext != -1)
-                {
-                    Entidad ENext = Entidad.FetchAt(Stream, E.ApNext);
-                    if (ENext.Nombre == EntidadName)
-                    {
-                        if (ENext.ApNext != -1)
-                        {
-                            E.ApNext = ENext.ApNext;
-                            E.WriteAt(Stream, E.Pos);
-                            return;
-                        }
-                        else
-                        {
-                            E.ApNext = -1;
-                            E.WriteAt(Stream, E.Pos);
-                            return;
-
-                        }
-
-
-                    }
-                    if (E.Nombre == EntidadName)
-                    {
-                        Stream.Seek(0, SeekOrigin.Begin);
-                        BinaryWriter Writer = new BinaryWriter(Stream);
-                        Writer.Write((Int64)E.ApNext);
-                        return;
-                    }
-
-                    AuxPtr = E.ApNext;
-                }
-                else
-                {
-                    if (Cab == E.Pos&&E.Nombre==EntidadName) 
-                    {
-                        Stream.Seek(0, SeekOrigin.Begin);
-                        BinaryWriter Writer = new BinaryWriter(Stream);
-                        Writer.Write((Int64)(-1));
-                        return;
-                    }
-                    
-                }
-                
-                                               
-            }
-            
-            
-        }
+        
+        
+       
 
         private void button4_Click(object sender, EventArgs e)
-        {
-            FileStream Stream = File.Open(CurreentFileName, FileMode.Open);
-            DeleteEntidad(Stream, dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
+        {           
+            currentFile.DeleteEntidad(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());           
             dataGridView1.Rows.Clear();
-            DumpToScreen(Stream);
-            Stream.Close();
+            DumpCurrentFileToScreen();
 
         }
-        private void EditEntidad(string EntidadName,string NewNAme)
-        {
-            using (FileStream Stream = File.Open(CurreentFileName, FileMode.Open))
-            {
-                Int64 Pos = FindEntidad(Stream, EntidadName);
-                if (Pos != -1)
-                {
-                    Entidad EAux = Entidad.FetchAt(Stream, Pos);
-                    EAux.SetName(NewNAme);
-                    EAux.WriteAt(Stream, Pos);
-                }
-            }
-            if (File.Exists(ProjectName+"\\"+EntidadName))
-                File.Move(ProjectName + "\\" + EntidadName, ProjectName+ "\\" + NewNAme);
-
-        }
+        
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            FileStream Stream = File.OpenRead(CurreentFileName);
-            if (FindEntidad(Stream, dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()) == -1)
+
+            if (currentFile.FindEntidad(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()) == -1)
             {
-                Stream.Close();
-                EditEntidad(EditingCellName, dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
+                currentFile.EditEntidad(EditingCellName, dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
+                DumpCurrentFileToScreen();
             }
-               
+                
             else
             {
-                Stream.Close();
                 MessageBox.Show("El nombre de la entidad Ya existe");
                 dataGridView1.Rows[e.RowIndex].Cells[0].Value = EditingCellName;
-
-            }
-               
-            
-           // MessageBox.Show("Entidad Changed "+e.RowIndex.ToString());
+            }          
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -340,9 +183,12 @@ namespace FileStruct
         }
         private void CloseFile()
         {
-            CurreentFileName = string.Empty;
+            currentFile = null;
+            //CurreentFileName = string.Empty;
             DisableFileManipulation();
             dataGridView1.Rows.Clear();
+            comboBox1.Items.Clear();
+            dataGridView2.Rows.Clear();
 
         }
 
@@ -350,6 +196,171 @@ namespace FileStruct
         {
             CloseFile();
         }
+
+        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedItem != null)
+            {
+                dataGridView2.Rows.Clear();
+                button5.Enabled = true;
+                Int64 entidadPos = currentFile.FindEntidad(comboBox1.SelectedItem.ToString());
+                Entidad E = currentFile.FetchEntidad(entidadPos);
+                foreach (Atributo a in E.Atributos)
+                {
+                    object[] reg = { a.LlavePrim, a.Nombre, dataGridViewComboBoxColumn1.Items[a.TipoNumber], a.Longitud, a.Posicion, a.ApNextAtr };
+                    dataGridView2.Rows.Add(reg);
+                }
+
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+           Int64 entidadPos = currentFile.FindEntidad(comboBox1.SelectedItem.ToString());
+            Entidad E=currentFile.FetchEntidad(entidadPos);
+            Atributo AtrAux = new Atributo();
+
+
+            if ((!string.IsNullOrEmpty(textBox3.Text)) && (comboBox2.SelectedItem!=null) && (!string.IsNullOrEmpty(textBox4.Text)))
+            {
+
+                AtrAux.SetName(textBox3.Text);
+                AtrAux.SetType(comboBox2.SelectedIndex);
+                int.TryParse(textBox4.Text, out int longitud);
+                AtrAux.Longitud = longitud;
+                AtrAux.LlavePrim = checkBox1.Checked;           
+               
+
+                if ((checkBox1.Checked && !E.HasPrimaryKey) || (!checkBox1.Checked))
+                {
+                    if (E.Atributos.All(a => a.Nombre != AtrAux.Nombre))
+                    {
+                        currentFile.InsertAtributo(E,AtrAux);
+                        dataGridView2.Rows.Clear();
+                        foreach (Atributo a in E.Atributos)
+                        {
+                            object[] reg = {a.LlavePrim,a.Nombre,dataGridViewComboBoxColumn1.Items[a.TipoNumber] ,a.Longitud,a.Posicion,a.ApNextAtr};
+                            dataGridView2.Rows.Add(reg);
+                        }                       
+                        
+                    }
+                    else
+                        MessageBox.Show("La entidad ya contiene un atributo co el nombre "+ textBox3.Text);
+                }
+                else
+                    MessageBox.Show("Ya existe una llave primaria en la entidad " + E.Nombre);                
+            }
+            else
+                MessageBox.Show("Complete todos los campos para el nuevo atributo");
+       
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (comboBox2.SelectedIndex)
+            {
+                case 0: textBox4.Text = "4";
+                    textBox4.Enabled = false;
+                    break;
+
+                case 1:
+                    textBox4.Text = "4";
+                    textBox4.Enabled = false;
+                    break;
+
+                case 3:
+                    textBox4.Text ="1" ;
+                    textBox4.Enabled = false;
+                    break;
+
+                case 4:
+                    textBox4.Text = "8";
+                    textBox4.Enabled = false;
+                    break;
+                case 2:
+                    textBox4.Clear();
+                    textBox4.Enabled = true;
+                    break;
+            }
+        }
+
+        private void textBox4_KeyDown(object sender, KeyEventArgs e)
+        {
+           
+        }
+
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!Char.IsNumber(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Int64 entidadPos = currentFile.FindEntidad(comboBox1.Text);
+            Entidad E=currentFile.FetchEntidad(entidadPos);
+            currentFile.DeleteAtributo(E,dataGridView2.SelectedRows[0].Cells[1].Value.ToString());
+            dataGridView2.Rows.Clear();
+            foreach (Atributo a in E.Atributos)
+            {
+                object[] reg = { a.LlavePrim, a.Nombre, dataGridViewComboBoxColumn1.Items[a.TipoNumber], a.Longitud, a.Posicion, a.ApNextAtr };
+                dataGridView2.Rows.Add(reg);
+            }
+        }
+
+        private void dataGridView2_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            EditingCellName = dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+
+           // MessageBox.Show(e.RowIndex.ToString()+":"+e.ColumnIndex.ToString()+" "+);
+        }
+
+        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            Int64 entidadPos = currentFile.FindEntidad(comboBox1.Text);
+            Entidad E = currentFile.FetchEntidad(entidadPos);
+            int colIndex= dataGridView2.CurrentCell.ColumnIndex;
+            int rowIndex = dataGridView2.CurrentCell.RowIndex;
+            string atrName = dataGridView2.CurrentRow.Cells[1].Value.ToString();
+
+            if ((colIndex != 0) && (colIndex != 1))
+            {
+                if (colIndex == 2)
+                {
+
+                }
+                currentFile.EditAtributo(E,atrName,colIndex,dataGridView2.CurrentRow.Cells[colIndex].Value.ToString());
+            }
+            else if (colIndex == 0)
+            {
+                if (!E.HasPrimaryKey)
+                {
+                    currentFile.EditAtributo(E, atrName, colIndex, dataGridView1.CurrentRow.Cells[colIndex].ToString());
+                }
+                else
+                    MessageBox.Show("La entidad ya tiene una llave primaria");
+            }
+            else if (colIndex == 1)
+            {
+                if (E.Atributos.FindIndex(atr => atr.Nombre == atrName) == -1)
+                {
+                    currentFile.EditAtributo(E, EditingCellName, colIndex, atrName);
+                }
+                else
+                {
+                    dataGridView2.CurrentRow.Cells[colIndex].Value = EditingCellName;
+                    MessageBox.Show("La entidad ya contiene un atributo con el nombre" + EditingCellName);
+                }
+
+            }
+
+
+
+
+
+        }
+            
+        
     }
 }
 

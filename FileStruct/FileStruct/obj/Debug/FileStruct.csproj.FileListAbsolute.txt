@@ -7,3 +7,4 @@ C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.P
 C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csproj.GenerateResource.Cache
 C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.exe
 C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.pdb
+C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csproj.CoreCompileInputs.cache
