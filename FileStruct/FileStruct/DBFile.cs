@@ -367,6 +367,7 @@ namespace FileStruct
                     case 3:
                         int.TryParse(value, out int l);
                         atrAux.Longitud = l;
+
                         break;
                 }
                 WriteAtributo(Stream, atrAux.Posicion, atrAux);
@@ -389,6 +390,8 @@ namespace FileStruct
             }
             if (atributos.Any(a => a.LlavePrim))
                 entidad.HasPrimaryKey = true;
+            else
+                entidad.HasPrimaryKey = false;
             entidad.Atributos = atributos;
 
         }
@@ -416,7 +419,6 @@ namespace FileStruct
                     {
                         entidad.Atributos[(int)index - 1].ApNextAtr = -1;
                         WriteAtributo(Stream, entidad.Atributos[(int)index - 1].Posicion, entidad.Atributos[(int)index - 1]);
-
                     }
                     else
                     {
