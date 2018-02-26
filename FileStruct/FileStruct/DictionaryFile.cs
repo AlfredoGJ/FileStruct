@@ -9,24 +9,26 @@ using System.Windows.Forms;
 namespace FileStruct
 {
 
-    class DBFile
+    class DictionaryFile
     {
         private bool isOpen;
         private Int64 lenght;
         private string filePath;
         private string projectPath;
+        private FileStream stream;
 
         public bool IsOpen {get => isOpen;}
         public Int64 Lenght { get => lenght; }
         public string FilePath { get => filePath;}
 
-        public DBFile(string projectDirectory)
+        public DictionaryFile(string projectDirectory)
         {
             this.projectPath = projectDirectory;
             this.filePath = projectDirectory + "//Diccionario";
             Int64 size;
             using (FileStream Stream = File.Open(filePath, FileMode.OpenOrCreate))
             {
+                
                 size = Stream.Length;
                 Stream.Close();
             }

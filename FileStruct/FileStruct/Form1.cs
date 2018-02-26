@@ -10,13 +10,15 @@ using System.Windows.Forms;
 using System.IO;
 
 namespace FileStruct
+
 {
+   
     public partial class Form1 : Form
     {
 
-        private DBFile currentFile;
+        private DictionaryFile currentFile;
         private string EditingCellName;
-        private string projectName;
+        public static string projectName;
         public Form1()
         {
             InitializeComponent();
@@ -76,7 +78,7 @@ namespace FileStruct
             {
                 projectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
                 //CurreentFileName = ProjectName+ "\\Diccionario.bin";
-                currentFile = new DBFile(projectName);
+                currentFile = new DictionaryFile(projectName);
                 DumpCurrentFileToScreen();
 
             }
@@ -86,7 +88,7 @@ namespace FileStruct
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + textBox2.Text);
                 projectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
                 //CurreentFileName = ProjectName + "\\Diccionario.bin";
-                currentFile = new DBFile(projectName);
+                currentFile = new DictionaryFile(projectName);
 
 
 
@@ -100,11 +102,13 @@ namespace FileStruct
         {
             dataGridView1.Rows.Clear();
             comboBox1.Items.Clear();
+            datos_EntidadesComboBox.Items.Clear();
             List<object[]> Entidades = currentFile.ReadEntidades();
             foreach (object[] o in Entidades)
             {
                 dataGridView1.Rows.Add(o);
                 comboBox1.Items.Add(o[0]);
+                datos_EntidadesComboBox.Items.Add(o[0]);
             }
 
         }
@@ -195,6 +199,7 @@ namespace FileStruct
             dataGridView1.Rows.Clear();
             comboBox1.Items.Clear();
             dataGridView2.Rows.Clear();
+            datos_EntidadesComboBox.Items.Clear();
 
         }
 
@@ -477,6 +482,94 @@ namespace FileStruct
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void datos_EntidadesComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            datos_DatosEntidadDataGridView.Columns.Clear();
+            datos_DatosEntidadDataGridView.Rows.Clear();
+            Int64 indice = currentFile.FindEntidad(datos_EntidadesComboBox.SelectedItem.ToString());
+            Entidad entidad=currentFile.FetchEntidad(indice);
+
+            foreach (Atributo atr in entidad.Atributos)
+            {
+                DataGridViewColumn column= new DataGridViewColumn();
+                DataGridViewTextBoxColumn c = new DataGridViewTextBoxColumn();
+              //  c.ValueType = typeof(int);
+                switch (atr.Tipo)
+                {
+                    case 'I':
+                        //column = new DataGridViewTextBoxColumn();
+                        
+                        column.CellTemplate= new DataGridViewTextBoxCell();
+                        column.Width = 80;
+                        column.Name = atr.Nombre;
+                        column.ValueType = typeof(int);
+                        break;
+
+                    case 'C':
+                        //column = new DataGridViewTextBoxColumn();
+                        column.CellTemplate= new DataGridViewTextBoxCell();
+                        column.Width = 20;
+                        column.ValueType = typeof(char);
+
+                        break;
+
+                    case 'L':
+                        //column = new DataGridViewTextBoxColumn();
+                        column.CellTemplate = new DataGridViewTextBoxCell();
+                        column.Width = 120;
+                        column.ValueType = typeof(long);
+                        break;
+
+                    case 'F':
+                        //column = new DataGridViewTextBoxColumn();
+                        column.CellTemplate = new DataGridViewTextBoxCell();
+                        column.Width = 80;
+                        column.ValueType = typeof(float);
+
+                        break;
+
+                    case 'B':
+                        //column = new DataGridViewCheckBoxColumn();
+                        column.CellTemplate = new DataGridViewCheckBoxCell();
+                        column.Width = 60;
+                        column.ValueType = typeof(bool);
+                        break;
+
+                    case 'S':
+                        //column = new DataGridViewTextBoxColumn();
+                        column.CellTemplate = new DataGridViewTextBoxCell();
+                        column.Width = 8 * (int)atr.Longitud;
+                        column.Name = atr.Nombre;
+                        column.ValueType = typeof(string);
+
+                        break;
+
+
+
+                }
+                datos_DatosEntidadDataGridView.Columns.Add(column);
+
+
+            }
+
+        }
+
+        private void datos_DatosEntidadDataGridView_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            Int64 index=currentFile.FindEntidad(datos_EntidadesComboBox.Text);
+            Entidad entidad = currentFile.FetchEntidad(index);
+            List<Tuple<char, object>> fields= new List<Tuple<char, object>>();
+
+            for( int i=0; i< entidad.Atributos.Count;i++)
+            {
+                fields.Add(new Tuple<char, object>(entidad.Atributos[i].Tipo,datos_DatosEntidadDataGridView.CurrentRow.Cells[i].Value));
+              
+            }
+
+            entidad.InsertRegister(new DataRegister(fields));
+            
         }
     }
 }

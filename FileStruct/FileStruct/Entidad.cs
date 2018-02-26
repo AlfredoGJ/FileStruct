@@ -46,38 +46,7 @@ namespace FileStruct
                     this.nombre[i] = ' ';
             }
         }
-
-        //public void WriteAt(FileStream Stream,Int64 Pos)
-        //{
-        //    BinaryWriter Writer = new BinaryWriter(Stream);
-        //    this.posicion = Pos;
-        //    Writer.Seek((int)Pos,SeekOrigin.Begin);
-        //    Writer.Write(nombre.ToArray());
-        //    Writer.Write(posicion);
-        //    Writer.Write(ap_atributos);
-        //    Writer.Write(ap_datos);
-        //    Writer.Write(ap_siguiente);
-           
-                
-            
-        //}
-
-        //public static Entidad FetchAt(FileStream Stream, Int64 Pos)
-        //{
-        //    Stream.Seek(Pos, SeekOrigin.Begin);
-        //    Entidad E = new Entidad();
-        //    BinaryReader Reader = new BinaryReader(Stream);
-                            
-        //    E.nombre = Reader.ReadChars(30);
-        //    E.posicion = Reader.ReadInt64();
-        //    E.ap_atributos = Reader.ReadInt64();
-        //    E.ap_datos = Reader.ReadInt64();
-        //    E.ap_siguiente = Reader.ReadInt64();
         
-            
-        //    return E;
-        //}
-
         public static Entidad CreateNew(string Name)
         {
 
@@ -90,6 +59,77 @@ namespace FileStruct
            
             return E;
         }
+
+        public void InsertRegister(DataRegister register )
+        {
+            DataFile file = new DataFile(Form1.projectName + "//" + this.Nombre);
+            List<DataRegister> registers = GetRegisters(file);
+
+            if (registers.Count == 0)
+                file.WriteRegister(0, register);
+            else
+            {
+                file.WriteRegister(file.lenght,register);
+                registers.Add(register);
+                switch (register.DataFields[register.keyprim].Item1)
+                {
+                    case 'I':
+                        registers.OrderBy(x=> (int)x.DataFields[x.keyprim].Item2);
+                            break;
+                    case 'F':
+                        registers.OrderBy(x => (float)x.DataFields[x.keyprim].Item2);
+                        break;
+                    case 'S':
+                        registers.OrderBy(x => (string)x.DataFields[x.keyprim].Item2);
+                        break;
+                    case 'C':
+                        registers.OrderBy(x => (char)x.DataFields[x.keyprim].Item2);
+                        break;
+                    case 'L':
+                        registers.OrderBy(x => (long)x.DataFields[x.keyprim].Item2);
+                        break;
+                }
+
+                Int64 index = registers.IndexOf(register);
+                if (index == 0)
+                {
+                    register.next_reg = registers[1].pos;
+                    ap_datos = register.pos;
+                    file.WriteRegister(register.pos,register);
+
+                }
+                else if (index == registers.Count - 1)
+                {
+                    registers[(int)index-1].next_reg = register.pos;
+                    file.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
+                }
+                else
+                {
+                    register.next_reg = registers[(int)index - 1].next_reg;
+                    registers[(int)index - 1].next_reg = register.pos;
+                    file.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
+                    file.WriteRegister(register.pos, register);
+                    
+
+                }
+                
+            }
+            file.Close();
+
+        }
+
+        public List<DataRegister> GetRegisters(DataFile file)
+        {
+           
+            if (ap_datos != -1)
+                return file.GetAllRegisters(this.Atributos);
+
+            else
+                return new List<DataRegister>();
+           
+        }
+
+
 
         
     }

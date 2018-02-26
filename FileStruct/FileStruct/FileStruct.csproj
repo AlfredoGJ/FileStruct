@@ -46,7 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Atributo.cs" />
-    <Compile Include="DBFile.cs" />
+    <Compile Include="DataFile.cs" />
+    <Compile Include="DataRegister.cs" />
+    <Compile Include="DictionaryFile.cs" />
     <Compile Include="Entidad.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
