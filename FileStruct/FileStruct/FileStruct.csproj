@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Atributo.cs" />
+    <Compile Include="DataField.cs" />
     <Compile Include="DataFile.cs" />
     <Compile Include="DataRegister.cs" />
     <Compile Include="DictionaryFile.cs" />
@@ -58,6 +59,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

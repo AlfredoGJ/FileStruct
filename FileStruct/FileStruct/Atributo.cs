@@ -13,6 +13,7 @@ namespace FileStruct
     {
         private string charTypes = "IFSCL";
 
+        public Type type;
         private int tipoIndex;        
         private char[] nombre;
         private char tipo= ' ';
@@ -50,6 +51,10 @@ namespace FileStruct
         {
             this.tipo = tipo;
             tipoIndex = charTypes.IndexOf(tipo);
+        }
+        public void SetTypeType(Type type)
+        {
+            this.type = type;
         }
         public void SetName(string name)
         {

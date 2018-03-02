@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Windows.Forms;
 
 namespace FileStruct
 {
@@ -17,7 +18,7 @@ namespace FileStruct
         public DataFile(string filepath)
         {
             filePath = filepath;
-            stream = File.Open(filepath,FileMode.Open);
+            stream = File.Open(filepath,FileMode.OpenOrCreate);
             
         }
 
@@ -27,30 +28,23 @@ namespace FileStruct
             BinaryWriter writer = new BinaryWriter(stream);
             writer.Seek((int)pos, SeekOrigin.Begin);
 
-            foreach (Tuple<char, object> field in register.DataFields)
+            foreach (DataField field in register.fields)
             {
+               // MessageBox.Show(field.value.GetType().ToString());
 
-                switch (field.Item1)
-                {
-                    case 'I':
-                        writer.Write((Int32) field.Item2);            
-                        break;
-                    case 'F':
-                        writer.Write((float)field.Item2);
-                        break;
-                    case 'S':
-                        writer.Write((string)field.Item2);
-                        break;
-                    case 'C':
-                        writer.Write((char)field.Item2);
-                        break;
-
-                    case 'L':
-                        writer.Write((long)field.Item2);
-                        break;
-                }
+                if (field.value.GetType() == typeof(Int32))
+                    writer.Write((Int32)field.value); 
+                else if (field.value.GetType() == typeof(Single))
+                    writer.Write((Single)field.value);
+                else if (field.value.GetType() == typeof(char[]))
+                    writer.Write((char[])field.value);
+                else if (field.value.GetType() == typeof(char))
+                    writer.Write((char)field.value);
+                else if (field.value.GetType() == typeof(long))
+                    writer.Write((long)field.value);
             }
             writer.Write(register.next_reg);
+            register.pos = pos;
 
 
         }
@@ -60,42 +54,52 @@ namespace FileStruct
             BinaryReader reader = new BinaryReader(stream);
             DataRegister register;
             reader.BaseStream.Seek(pos,SeekOrigin.Begin);
-            List<Tuple<char, object>> fields= new List<Tuple<char, object>>();
+            List<DataField> fields = new List<DataField>();
+
             foreach (Atributo atr in template)
             {
                 switch (atr.Tipo)
                 {
                     case 'I':
-                        fields.Add(new Tuple<char, object>('I', reader.ReadInt32()));
+                     
+                        fields.Add(new DataField(reader.ReadInt32(), atr.LlavePrim));
                         break;
 
                     case 'F':
-                        fields.Add(new Tuple<char, object>('F', reader.ReadSingle()));
+                       
+                        fields.Add(new DataField(reader.ReadSingle(), atr.LlavePrim));
                         break;
 
                     case 'S':
-                        fields.Add(new Tuple<char, object>('S', new string(reader.ReadChars((int)atr.Longitud))));
+                       
+                        fields.Add(new DataField(reader.ReadChars((int)atr.Longitud), atr.LlavePrim));
                         break;
 
                     case 'C':
-                        fields.Add(new Tuple<char, object>('C', reader.ReadChar()));
+                     
+                        fields.Add(new DataField(reader.ReadChar(), atr.LlavePrim));
+
                         break;
                     case 'L':
-                        fields.Add(new Tuple<char, object>('L', reader.ReadInt64()));
+                       
+                        fields.Add(new DataField(reader.ReadInt64(), atr.LlavePrim));
                         break;
                 }
             }
 
             register = new DataRegister(fields);
             register.pos = pos;
+            register.next_reg = reader.ReadInt64();
+            register.keyprim = template.FindIndex(x => x.LlavePrim==true);
+            
             return register;
         }
 
-        public  List<DataRegister> GetAllRegisters(List<Atributo> template)
+        public  List<DataRegister> GetAllRegisters(List<Atributo> template, Int64 begin)
         {
             BinaryReader reader = new BinaryReader(stream);
             List<DataRegister> registers= new List<DataRegister>();
-            DataRegister register = this.ReadRegister(0,template);
+            DataRegister register = this.ReadRegister(begin,template);
 
 
             registers.Add(register);

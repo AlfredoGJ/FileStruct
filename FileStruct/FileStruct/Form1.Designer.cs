@@ -67,6 +67,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.datos_DatosEntidadDataGridView = new System.Windows.Forms.DataGridView();
             this.label8 = new System.Windows.Forms.Label();
             this.datos_EntidadesComboBox = new System.Windows.Forms.ComboBox();
@@ -447,6 +448,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.flowLayoutPanel1);
             this.tabPage2.Controls.Add(this.datos_DatosEntidadDataGridView);
             this.tabPage2.Controls.Add(this.label8);
             this.tabPage2.Controls.Add(this.datos_EntidadesComboBox);
@@ -458,6 +460,13 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Datos";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(112, 95);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(731, 29);
+            this.flowLayoutPanel1.TabIndex = 4;
             // 
             // datos_DatosEntidadDataGridView
             // 
@@ -490,6 +499,8 @@
             this.datos_DatosEntidadDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.datos_DatosEntidadDataGridView.Size = new System.Drawing.Size(731, 371);
             this.datos_DatosEntidadDataGridView.TabIndex = 3;
+            this.datos_DatosEntidadDataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.datos_DatosEntidadDataGridView_CellBeginEdit);
+            this.datos_DatosEntidadDataGridView.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.datos_DatosEntidadDataGridView_RowHeaderMouseDoubleClick);
             this.datos_DatosEntidadDataGridView.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.datos_DatosEntidadDataGridView_RowValidating);
             // 
             // label8
@@ -573,6 +584,7 @@
         private System.Windows.Forms.ComboBox datos_EntidadesComboBox;
         private System.Windows.Forms.DataGridView datos_DatosEntidadDataGridView;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
 
