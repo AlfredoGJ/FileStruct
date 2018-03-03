@@ -224,6 +224,9 @@ namespace FileStruct
 
         private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
         {
+
+            EnableEntidadEditing();
+
             if (comboBox1.SelectedItem != null)
             {
                 dataGridView2.Rows.Clear();
@@ -682,14 +685,22 @@ namespace FileStruct
                 else if ((string)datos_DatosEntidadDataGridView.CurrentRow.Tag == "edited")
                 {
                     int keyPrimIndex = entidad.Atributos.FindIndex(z => z.LlavePrim == true);
+                    List<DataRegister> registers = entidad.GetRegisters();
+                    int indexOldKey = Util.IsKeyHere(registers, new DataField(EditingCellValue,true));
+                    int indexNewKey = Util.IsKeyHere(registers, register.key);
 
-                    int index = Util.IsKeyHere(entidad.GetRegisters(), register.key);
-
-                    if (index != -1)
+                    if (indexNewKey != -1)
                     {
-                        MessageBox.Show("estas tratando de editar el registro con clave " + EditingCellValue.ToString());
+                        MessageBox.Show("Ya existe un registro con esa llave en la entidad");
+                        e.Cancel = true;
+                    }
+
+                    else if (indexOldKey != -1)
+                    {
+                        //MessageBox.Show("estas tratando de editar el registro con clave " + EditingCellValue.ToString());
+
                         entidad.InsertEditedRegister(register, EditingCellValue);
-                        //currentFile.WriteEntidad(entidad.Pos, entidad);   <<----- DONT FORGET TO ENABLE THIS
+                        currentFile.WriteEntidad(entidad.Pos, entidad);  // <<----- DONT FORGET TO ENABLE THIS
                     }
                     else
                     {

@@ -278,6 +278,7 @@ namespace FileStruct
                 E.ApData = Reader.ReadInt64();
                 E.ApNext = Reader.ReadInt64();
                 FindAtributos(stream, E);
+                E.Dictionary = this;
                 return E;
             }
             else

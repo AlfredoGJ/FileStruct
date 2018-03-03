@@ -19,7 +19,7 @@ namespace FileStruct
         private List<Atributo> atributos;
         private bool hasPrimaryKey=false;
         private DataFile file;
-
+        public DictionaryFile Dictionary;
 
         public char[] NombreAsArray { get =>nombre; }
         public string Nombre { get => new string(nombre).Trim();}
@@ -110,13 +110,7 @@ namespace FileStruct
 
         public void InsertEditedRegister(DataRegister register, object previouskey)
         {
-           
-            file.WriteRegister(register.pos,register);
-            List<DataRegister> registers = GetRegisters();
-            //int keyPrimIndex = Atributos.IndexOf(Atributos.Find(x => x.LlavePrim == true));
-            registers = OrderRegistersList(registers, register.key);
-
-
+                 
             if (previouskey == register.key.value)
             { 
                 // The key has not changed
@@ -124,10 +118,15 @@ namespace FileStruct
 
             }
             else
-            { 
+            {
                 // Th key has been changed
 
-                Int64 index = Util.IsKeyHere(registers, new DataField(previouskey, true));
+                DeleteRegisterAt(register.pos);
+                Dictionary.WriteEntidad(this.posicion, this);
+                List<DataRegister> registers = GetRegisters();
+                registers.Add(register);
+                registers = OrderRegistersList(registers, register.key);
+                Int64 index = Util.IsKeyHere(registers, register.key);
 
                 if (index == 0)
                 {
@@ -139,6 +138,7 @@ namespace FileStruct
                 {
                     registers[(int)index - 1].next_reg = register.pos;
                     file.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
+                    register.next_reg = -1;
                     file.WriteRegister(register.pos, register);
                 }
                 else
