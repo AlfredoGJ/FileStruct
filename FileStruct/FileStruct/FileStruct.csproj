@@ -45,12 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Atributo.cs" />
+    <Compile Include="Attribute.cs" />
     <Compile Include="DataField.cs" />
     <Compile Include="DataFile.cs" />
     <Compile Include="DataRegister.cs" />
     <Compile Include="DictionaryFile.cs" />
-    <Compile Include="Entidad.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -49,14 +49,14 @@ namespace FileStruct
 
         }
 
-        public DataRegister ReadRegister(Int64 pos,List<Atributo> template )
+        public DataRegister ReadRegister(Int64 pos,List<Attribute> template )
         {
             BinaryReader reader = new BinaryReader(stream);
             DataRegister register;
             reader.BaseStream.Seek(pos,SeekOrigin.Begin);
             List<DataField> fields = new List<DataField>();
 
-            foreach (Atributo atr in template)
+            foreach (Attribute atr in template)
             {
                 switch (atr.Tipo)
                 {
@@ -95,7 +95,7 @@ namespace FileStruct
             return register;
         }
 
-        public  List<DataRegister> GetAllRegisters(List<Atributo> template, Int64 begin)
+        public  List<DataRegister> GetAllRegisters(List<Attribute> template, Int64 begin)
         {
             BinaryReader reader = new BinaryReader(stream);
             List<DataRegister> registers= new List<DataRegister>();

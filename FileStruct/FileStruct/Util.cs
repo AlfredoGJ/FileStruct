@@ -51,7 +51,13 @@ namespace FileStruct
             return -1;
         }
 
-        public static DataRegister RowToRegister(DataGridViewRow row,List<Atributo> atributos)
+        /// <summary>
+        /// Converts a DataGridView Row into a DataRegister  
+        /// </summary>
+        /// <param name="row"> The row as a DataGridViewRow object</param>
+        /// <param name="atributos"> A list of Atributes in which is based every register field </param>
+        /// <returns>A data register object with the values of the row </returns>
+        public static DataRegister RowToRegister(DataGridViewRow row,List<Attribute> atributos)
         {
             List<DataField> fields = new List<DataField>();
             for (int i = 0; i < atributos.Count; i++)

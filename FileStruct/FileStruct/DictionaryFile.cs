@@ -44,7 +44,7 @@ namespace FileStruct
        
             
         }
-        public void InsertEntidad(Entidad entidad)
+        public void InsertEntidad(Entity entidad)
         {
 
             //using (FileStream Stream = File.Open(filePath, FileMode.Open))
@@ -69,7 +69,7 @@ namespace FileStruct
                         Int64 APEntidad = Cab;
 
                        // Entidad LastEnt = Entidad.FetchAt(Stream, APEntidad);
-                        Entidad LastEnt = FetchEntidad(stream,APEntidad);
+                        Entity LastEnt = FetchEntidad(stream,APEntidad);
                         while (LastEnt.ApNext != -1)
                         {
                             LastEnt = FetchEntidad(stream, APEntidad);
@@ -123,12 +123,12 @@ namespace FileStruct
                 while (AuxPtr != -1)
                 {
                    // Entidad E = Entidad.FetchAt(Stream, AuxPtr);
-                    Entidad E = FetchEntidad(stream,AuxPtr);
+                    Entity E = FetchEntidad(stream,AuxPtr);
 
                     if (E.ApNext != -1)
                     {
                        // Entidad ENext = Entidad.FetchAt(Stream, E.ApNext);
-                        Entidad ENext = FetchEntidad(stream, E.ApNext);
+                        Entity ENext = FetchEntidad(stream, E.ApNext);
                         if (ENext.Nombre == EntidadName)
                         {
                             if (ENext.ApNext != -1)
@@ -184,7 +184,7 @@ namespace FileStruct
                 if (Pos != -1)
                 {
                    
-                    Entidad EAux = FetchEntidad(stream,Pos);
+                    Entity EAux = FetchEntidad(stream,Pos);
                     EAux.SetName(NewNAme);
                   
                     WriteEntidad(Pos,EAux,stream);
@@ -207,7 +207,7 @@ namespace FileStruct
                 while (ApAux != -1)
                 {
                    //Entidad EAux = Entidad.FetchAt(Stream, ApAux);
-                    Entidad EAux = FetchEntidad(stream,ApAux);
+                    Entity EAux = FetchEntidad(stream,ApAux);
                     object[] reg = { EAux.Nombre, EAux.Pos, EAux.ApAtr, EAux.ApData, EAux.ApNext };
                     entidades.Add(reg);
                     ApAux = EAux.ApNext;
@@ -219,9 +219,9 @@ namespace FileStruct
            
         }
         
-        private  Entidad FetchEntidad(FileStream Stream,Int64 Pos)
+        private  Entity FetchEntidad(FileStream Stream,Int64 Pos)
         {
-            Entidad E = new Entidad();           
+            Entity E = new Entity();           
             Stream.Seek(Pos, SeekOrigin.Begin);                
             BinaryReader Reader = new BinaryReader(Stream);
             E.SetName( new string(Reader.ReadChars(30)));
@@ -242,12 +242,12 @@ namespace FileStruct
         /// <returns>
         /// An Entidad object
         /// </returns>
-        public Entidad FetchEntidad(Int64 pos)
+        public Entity FetchEntidad(Int64 pos)
         {
           
                 stream.Seek(pos, SeekOrigin.Begin);
                 BinaryReader Reader = new BinaryReader(stream);
-                Entidad E = Entidad.CreateNew(new string(Reader.ReadChars(30)));     
+                Entity E = Entity.CreateNew(new string(Reader.ReadChars(30)));     
                 E.Pos = Reader.ReadInt64();
                 E.ApAtr = Reader.ReadInt64();
                 E.ApData = Reader.ReadInt64();
@@ -265,14 +265,14 @@ namespace FileStruct
         /// <param name="entidadName"> The name of the Entidad</param>
         /// <returns> An Entidad object if found, otherwise null
         /// </returns>
-        public Entidad FetchEntidad(string entidadName)
+        public Entity FetchEntidad(string entidadName)
         {
             Int64 pos = FindEntidad(entidadName);
             if (pos != -1)
             {
                 stream.Seek(pos, SeekOrigin.Begin);
                 BinaryReader Reader = new BinaryReader(stream);
-                Entidad E = Entidad.CreateNew(new string(Reader.ReadChars(30)));
+                Entity E = Entity.CreateNew(new string(Reader.ReadChars(30)));
                 E.Pos = Reader.ReadInt64();
                 E.ApAtr = Reader.ReadInt64();
                 E.ApData = Reader.ReadInt64();
@@ -300,7 +300,7 @@ namespace FileStruct
             Int64 AuxPtr = Reader.ReadInt64();
             while (AuxPtr != -1)
             {
-                Entidad E = FetchEntidad(stream, AuxPtr);
+                Entity E = FetchEntidad(stream, AuxPtr);
                 if (E.Nombre == EntidadName)
                     return E.Pos;
                 AuxPtr = E.ApNext;
@@ -309,7 +309,7 @@ namespace FileStruct
             
         }
 
-        private void WriteEntidad(Int64 Pos, Entidad entidad, FileStream stream)
+        private void WriteEntidad(Int64 Pos, Entity entidad, FileStream stream)
         {
             
             BinaryWriter Writer = new BinaryWriter(stream);
@@ -323,7 +323,7 @@ namespace FileStruct
             Writer.Write(entidad.ApNext);           
         }
 
-        public void WriteEntidad(Int64 Pos, Entidad entidad)
+        public void WriteEntidad(Int64 Pos, Entity entidad)
         {
             BinaryWriter Writer = new BinaryWriter(stream);
             entidad.Pos = Pos;
@@ -336,7 +336,7 @@ namespace FileStruct
             Writer.Write(entidad.ApNext);
         }
 
-        private void WriteAtributo(FileStream Stream, Int64 pos, Atributo atributo)
+        private void WriteAtributo(FileStream Stream, Int64 pos, Attribute atributo)
         {
 
             BinaryWriter Writer = new BinaryWriter(Stream);
@@ -351,10 +351,10 @@ namespace FileStruct
             Writer.Write(atributo.LlavePrim);
         }
 
-        private Atributo FetchAttibuto(FileStream Stream, Int64 Pos)
+        private Attribute FetchAttibuto(FileStream Stream, Int64 Pos)
         {
             Stream.Seek(Pos, SeekOrigin.Begin);
-            Atributo auxAtr = new Atributo();
+            Attribute auxAtr = new Attribute();
             BinaryReader Reader = new BinaryReader(Stream);
 
             auxAtr.SetName(new string(Reader.ReadChars(30)));
@@ -366,7 +366,7 @@ namespace FileStruct
 
             return auxAtr;
         }
-        public void InsertAtributo(Entidad entidad, Atributo atributo)
+        public void InsertAtributo(Entity entidad, Attribute atributo)
         {
             
                 if (entidad.Atributos.Count == 0)
@@ -379,7 +379,7 @@ namespace FileStruct
                 }
                 else
                 {
-                    Atributo atrAux = entidad.Atributos.Last();
+                    Attribute atrAux = entidad.Atributos.Last();
                     atrAux.ApNextAtr = stream.Length;
                     WriteAtributo(stream, atrAux.Posicion, atrAux);
                     WriteAtributo(stream, stream.Length, atributo);
@@ -391,9 +391,9 @@ namespace FileStruct
 
         }
 
-        public void EditAtributo(Entidad e, string atrName, int colIndex, string value)
+        public void EditAtributo(Entity e, string atrName, int colIndex, string value)
         {
-            Atributo atrAux = e.Atributos.Find(atr => atr.Nombre == atrName);
+            Attribute atrAux = e.Atributos.Find(atr => atr.Nombre == atrName);
 
           
                 switch (colIndex)
@@ -421,14 +421,14 @@ namespace FileStruct
           
         }
 
-        private void FindAtributos(FileStream stream, Entidad entidad)
+        private void FindAtributos(FileStream stream, Entity entidad)
         {
-            List<Atributo> atributos = new List<Atributo>();
+            List<Attribute> atributos = new List<Attribute>();
             Int64 apAux = entidad.ApAtr;
 
             while (apAux != -1)
             {
-                Atributo atrAux = FetchAttibuto(stream, apAux);
+                Attribute atrAux = FetchAttibuto(stream, apAux);
                 atributos.Add(atrAux);
                 apAux = atrAux.ApNextAtr;
 
@@ -441,7 +441,7 @@ namespace FileStruct
 
         }
 
-        public void DeleteAtributo(Entidad entidad, string atributoName)
+        public void DeleteAtributo(Entity entidad, string atributoName)
         {
             
                 if ((entidad.Atributos.Count == 1) && entidad.Atributos[0].Nombre == atributoName)

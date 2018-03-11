@@ -9,7 +9,7 @@ namespace FileStruct
 {
     public enum AtributeType {Int,Float,String,Char,Long};
     
-    class Atributo
+    class Attribute
     {
         private string charTypes = "IFSCL";
 
@@ -20,24 +20,24 @@ namespace FileStruct
         private Int64 longitud=-1;
         private Int64 posicion=-1;
         private Int64 apSigAtr=-1;
-        private bool llavePrim=false;
-
+        private bool isKey=false;
+        private Entity entidad; 
        
         public long Longitud { get => longitud; set => longitud = value; }
         public long Posicion { get => posicion; set => posicion = value; }
         public long ApNextAtr { get => apSigAtr; set => apSigAtr = value; }
-        public bool LlavePrim { get => llavePrim; set => llavePrim = value; }
+        public bool LlavePrim { get => isKey; set => isKey = value; }
         public char[] NombreAsArray { get => nombre;}
         public string Nombre { get => new string(nombre).Trim();}
         public int TipoNumber { get => tipoIndex;}
         public char Tipo { get => tipo;}
 
-        public Atributo()
+        public Attribute()
         {
             this.nombre = new char[30];
         }
 
-        public Atributo(string name)
+        public Attribute(string name)
         {
             this.nombre = new char[30];
             SetName(name);

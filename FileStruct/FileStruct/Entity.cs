@@ -7,7 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 namespace FileStruct
 {
-    class Entidad
+    class Entity
     {
 
 
@@ -16,27 +16,26 @@ namespace FileStruct
         private Int64 ap_atributos = -1;
         private Int64 ap_datos = -1;
         private Int64 ap_siguiente = -1;
-        private List<Atributo> atributos;
+        private List<Attribute> atributos;
         private bool hasPrimaryKey=false;
         private DataFile file;
-        public DictionaryFile Dictionary;
+        private DictionaryFile dictionary;
 
         public char[] NombreAsArray { get =>nombre; }
         public string Nombre { get => new string(nombre).Trim();}
         public Int64 Pos { get => posicion; set => posicion = value; }
         public Int64 ApAtr { get => ap_atributos; set => ap_atributos = value; }
         public Int64 ApData { get => ap_datos; set => ap_datos = value; }
-        public Int64 ApNext { get => ap_siguiente; set => ap_siguiente = value; }
-        
+        public Int64 ApNext { get => ap_siguiente; set => ap_siguiente = value; }      
         public Int64 Size { get => (sizeof(Int64) * 4 + 30); }
-        internal List<Atributo> Atributos { get => atributos; set => atributos = value; }
+        public List<Attribute> Atributos { get => atributos; set => atributos = value; }
         public bool HasPrimaryKey { get => hasPrimaryKey; set => hasPrimaryKey = value; }
+        public DictionaryFile Dictionary { get => dictionary; set => dictionary = value; }
 
-
-        public Entidad()
+        public Entity()
         {
             nombre= new char[30];
-            atributos = new List<Atributo>();
+            atributos = new List<Attribute>();
             
 
         }
@@ -52,10 +51,10 @@ namespace FileStruct
 
         }
         
-        public static Entidad CreateNew(string Name)
+        public static Entity CreateNew(string Name)
         {
 
-            Entidad E = new Entidad();
+            Entity E = new Entity();
             E.SetName(Name);
             E.posicion= -1;
             E.ApAtr = -1;
