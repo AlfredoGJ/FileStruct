@@ -72,7 +72,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.datos_DatosEntidadDataGridView = new System.Windows.Forms.DataGridView();
+            this.DataDGV = new System.Windows.Forms.DataGridView();
             this.label8 = new System.Windows.Forms.Label();
             this.datos_EntidadesComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -82,7 +82,7 @@
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.datos_DatosEntidadDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DataDGV)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox1
@@ -499,7 +499,7 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.flowLayoutPanel1);
-            this.tabPage2.Controls.Add(this.datos_DatosEntidadDataGridView);
+            this.tabPage2.Controls.Add(this.DataDGV);
             this.tabPage2.Controls.Add(this.label8);
             this.tabPage2.Controls.Add(this.datos_EntidadesComboBox);
             this.tabPage2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -518,7 +518,7 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(731, 29);
             this.flowLayoutPanel1.TabIndex = 4;
             // 
-            // datos_DatosEntidadDataGridView
+            // DataDGV
             // 
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
@@ -527,8 +527,8 @@
             dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.LightGreen;
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.datos_DatosEntidadDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
-            this.datos_DatosEntidadDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataDGV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            this.DataDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -536,9 +536,9 @@
             dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.LightGreen;
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.datos_DatosEntidadDataGridView.DefaultCellStyle = dataGridViewCellStyle9;
-            this.datos_DatosEntidadDataGridView.Location = new System.Drawing.Point(112, 130);
-            this.datos_DatosEntidadDataGridView.Name = "datos_DatosEntidadDataGridView";
+            this.DataDGV.DefaultCellStyle = dataGridViewCellStyle9;
+            this.DataDGV.Location = new System.Drawing.Point(112, 130);
+            this.DataDGV.Name = "DataDGV";
             dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -546,14 +546,14 @@
             dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.LightGreen;
             dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.datos_DatosEntidadDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
-            this.datos_DatosEntidadDataGridView.Size = new System.Drawing.Size(731, 371);
-            this.datos_DatosEntidadDataGridView.TabIndex = 3;
-            this.datos_DatosEntidadDataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.datos_DatosEntidadDataGridView_CellBeginEdit);
-            this.datos_DatosEntidadDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.datos_DatosEntidadDataGridView_CellValueChanged);
-            this.datos_DatosEntidadDataGridView.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.datos_DatosEntidadDataGridView_RowHeaderMouseDoubleClick);
-            this.datos_DatosEntidadDataGridView.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.datos_DatosEntidadDataGridView_RowValidating);
-            this.datos_DatosEntidadDataGridView.Leave += new System.EventHandler(this.datos_DatosEntidadDataGridView_Leave);
+            this.DataDGV.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            this.DataDGV.Size = new System.Drawing.Size(731, 371);
+            this.DataDGV.TabIndex = 3;
+            this.DataDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.datos_DatosEntidadDataGridView_CellBeginEdit);
+            this.DataDGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.datos_DatosEntidadDataGridView_CellValueChanged);
+            this.DataDGV.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.datos_DatosEntidadDataGridView_RowHeaderMouseDoubleClick);
+            this.DataDGV.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.datos_DatosEntidadDataGridView_RowValidating);
+            this.DataDGV.Leave += new System.EventHandler(this.datos_DatosEntidadDataGridView_Leave);
             // 
             // label8
             // 
@@ -593,7 +593,7 @@
             this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.datos_DatosEntidadDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DataDGV)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -634,7 +634,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox datos_EntidadesComboBox;
-        private System.Windows.Forms.DataGridView datos_DatosEntidadDataGridView;
+        private System.Windows.Forms.DataGridView DataDGV;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }

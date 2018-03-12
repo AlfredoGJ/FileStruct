@@ -8,7 +8,6 @@ using System.Windows.Forms;
 
 namespace FileStruct
 {
-
     class DictionaryFile
     {
         private bool isOpen;

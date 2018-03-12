@@ -84,7 +84,7 @@ namespace FileStruct
             }
 
             DataRegister register = new DataRegister(fields);
-            if (row.Cells[row.Cells.Count - 2].Value != null)
+            if (row.Cells[row.Cells.Count - 2].Value != DBNull.Value )
             {
                 register.pos = (Int64)row.Cells[row.Cells.Count - 2].Value;
                 register.next_reg = (Int64)row.Cells[row.Cells.Count - 1].Value;

@@ -9,8 +9,6 @@ namespace FileStruct
 {
     class Entity
     {
-
-
         private char[] nombre;
         private Int64 posicion = 8;
         private Int64 ap_atributos = -1;
@@ -18,7 +16,6 @@ namespace FileStruct
         private Int64 ap_siguiente = -1;
         private List<Attribute> atributos;
         private bool hasPrimaryKey=false;
-        private DataFile file;
         private DictionaryFile dictionary;
 
         public char[] NombreAsArray { get =>nombre; }
@@ -37,8 +34,8 @@ namespace FileStruct
             nombre= new char[30];
             atributos = new List<Attribute>();
             
-
         }
+
         public void SetName(string Name)
         {
             for (int i = 0; i < 30; i++)
@@ -60,20 +57,23 @@ namespace FileStruct
             E.ApAtr = -1;
             E.ApData = -1;
             E.ApNext = -1;
-            E.file = new DataFile(Form1.projectName + "//" + E.Nombre);
            
             return E;
         }
 
+       
+
         public void InsertRegister(DataRegister register)
         {
+
+                DataFile dataFile = new DataFile(Form1.projectName + "//" + this.Nombre);
                 List<DataRegister> registers = GetRegisters();
 
                 int keyPrimIndex = Atributos.IndexOf(Atributos.Find(x => x.LlavePrim == true));
 
                 if (registers.Count == 0)
                 {
-                    file.WriteRegister(0, register);
+                    dataFile.WriteRegister(0, register);
                     ApData = 0;
                 }
                 else
@@ -85,35 +85,36 @@ namespace FileStruct
                     if (index == 0)
                     {
                         register.next_reg = registers[1].pos;
-                        ap_datos = file.lenght;
-                        file.WriteRegister(file.lenght, register);
+                        ap_datos = dataFile.lenght;
+                        dataFile.WriteRegister(dataFile.lenght, register);
                     }
                     else if (index == registers.Count - 1)
                     {
-                        registers[(int)index - 1].next_reg = file.lenght;
-                        file.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
-                        file.WriteRegister(file.lenght, register);
+                        registers[(int)index - 1].next_reg = dataFile.lenght;
+                        dataFile.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
+                        dataFile.WriteRegister(dataFile.lenght, register);
                     }
                     else
                     {
                         register.next_reg = registers[(int)index - 1].next_reg;
-                        registers[(int)index - 1].next_reg = file.lenght;
-                        file.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
-                        file.WriteRegister(file.lenght, register);
+                        registers[(int)index - 1].next_reg = dataFile.lenght;
+                        dataFile.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
+                        dataFile.WriteRegister(dataFile.lenght, register);
 
                     }
                 }
-                file.Close();  
+                dataFile.Close();  
             
         }
 
         public void InsertEditedRegister(DataRegister register, object previouskey)
         {
-                 
+
+            DataFile dataFile = new DataFile(Form1.projectName + "//" + this.Nombre);
             if (previouskey == register.key.value)
             { 
                 // The key has not changed
-                file.WriteRegister(register.pos, register);
+                dataFile.WriteRegister(register.pos, register);
 
             }
             else
@@ -131,26 +132,26 @@ namespace FileStruct
                 {
                     register.next_reg = registers[1].pos;
                     ap_datos = register.pos;
-                    file.WriteRegister(register.pos, register);
+                    dataFile.WriteRegister(register.pos, register);
                 }
                 else if (index == registers.Count - 1)
                 {
                     registers[(int)index - 1].next_reg = register.pos;
-                    file.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
+                    dataFile.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
                     register.next_reg = -1;
-                    file.WriteRegister(register.pos, register);
+                    dataFile.WriteRegister(register.pos, register);
                 }
                 else
                 {
                     register.next_reg = registers[(int)index - 1].next_reg;
                     registers[(int)index - 1].next_reg = register.pos;
-                    file.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
-                    file.WriteRegister(register.pos, register);
+                    dataFile.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
+                    dataFile.WriteRegister(register.pos, register);
                 }
             }
 
 
-            file.Close();
+            dataFile.Close();
         }
 
         public void DeleteRegisterAt(Int64 pos)
@@ -183,12 +184,24 @@ namespace FileStruct
 
         public List<DataRegister> GetRegisters()
         {
-          
+            DataFile dataFile = new DataFile(Form1.projectName + "//" + this.Nombre);
+
             if (ap_datos != -1)
-                return file.GetAllRegisters(this.Atributos,ap_datos);
+            {
+                List<DataRegister> registers= dataFile.GetAllRegisters(this.Atributos, ap_datos);
+                dataFile.Close();
+                return registers;
+            }
+
 
             else
+            {
+                dataFile.Close();
                 return new List<DataRegister>();
+            }
+               
+
+
            
         }
         /// <summary>
@@ -215,12 +228,12 @@ namespace FileStruct
 
         public void WriteRegister(DataRegister register)
         {
-            file.WriteRegister(register.pos,register);
+
+            DataFile dataFile = new DataFile(Form1.projectName + "//" + this.Nombre);
+            dataFile.WriteRegister(register.pos,register);
+            dataFile.Close();
         }
 
-        internal void Katanazo()
-        {
-            this.file.Close();
-        }
+        
     }
 }

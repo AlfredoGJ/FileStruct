@@ -133,7 +133,7 @@ namespace FileStruct
                 {
                     Entity E = Entity.CreateNew(textBox1.Text);
                     currentFile.InsertEntidad(E);
-                    E.Katanazo();
+                   
 
                 }
 
@@ -241,7 +241,7 @@ namespace FileStruct
                 if (E.ApData != -1)
                     DisableEntidadEditing();
 
-                E.Katanazo();
+               
 
             }
         }
@@ -306,8 +306,8 @@ namespace FileStruct
             }
             else
                 MessageBox.Show("Complete todos los campos para el nuevo atributo");
-            E.Katanazo();
-            //DumpCurrentFileToScreen();
+            
+            
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -363,7 +363,7 @@ namespace FileStruct
                 object[] reg = { a.LlavePrim, a.Nombre, dataGridViewComboBoxColumn1.Items[a.TipoNumber], a.Longitud, a.Posicion, a.ApNextAtr };
                 dataGridView2.Rows.Add(reg);
             }
-            E.Katanazo();
+            
         }
         private void updateAtributos(Entity entidad)
         {
@@ -457,7 +457,7 @@ namespace FileStruct
             }
 
 
-            E.Katanazo();
+          
 
 
         }
@@ -506,7 +506,7 @@ namespace FileStruct
 
                 }
                 updateAtributos(E);
-                E.Katanazo();
+              
             }
         }
 
@@ -532,188 +532,15 @@ namespace FileStruct
 
         private void datos_EntidadesComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            datos_DatosEntidadDataGridView.Columns.Clear();
-            datos_DatosEntidadDataGridView.Rows.Clear();
-            Int64 indice = currentFile.FindEntidad(datos_EntidadesComboBox.SelectedItem.ToString());
-            Entity entidad = currentFile.FetchEntidad(indice);
+            
+            DataFill(datos_EntidadesComboBox.Text);
 
-            foreach (Attribute atr in entidad.Atributos)
-            {
-                DataGridViewColumn column = new DataGridViewColumn();
-                DataGridViewTextBoxColumn c = new DataGridViewTextBoxColumn();
-
-
-                switch (atr.Tipo)
-                {
-                    case 'I':
-                        //column = new DataGridViewTextBoxColumn();
-
-                        column.CellTemplate = new DataGridViewTextBoxCell();
-                        column.Width = 80;
-                        column.Name = atr.Nombre;
-                        column.ValueType = typeof(int);
-                        break;
-
-                    case 'C':
-                        column = new DataGridViewTextBoxColumn();
-                        column.CellTemplate = new DataGridViewTextBoxCell();
-                        column.Width = 20;
-                        column.ValueType = typeof(char);
-                        column.Name = atr.Nombre;
-                        c = (DataGridViewTextBoxColumn)column;
-                        c.MaxInputLength = 1;
-
-                        break;
-
-                    case 'L':
-                        //column = new DataGridViewTextBoxColumn();
-                        column.CellTemplate = new DataGridViewTextBoxCell();
-                        column.Width = 120;
-                        column.ValueType = typeof(long);
-                        column.Name = atr.Nombre;
-                        break;
-
-                    case 'F':
-                        //column = new DataGridViewTextBoxColumn();
-                        column.CellTemplate = new DataGridViewTextBoxCell();
-                        column.Width = 80;
-                        column.ValueType = typeof(float);
-                        column.Name = atr.Nombre;
-
-                        break;
-
-                    case 'B':
-                        //column = new DataGridViewCheckBoxColumn();
-                        column.CellTemplate = new DataGridViewCheckBoxCell();
-                        column.Width = 60;
-                        column.ValueType = typeof(bool);
-                        column.Name = atr.Nombre;
-                        break;
-
-                    case 'S':
-                        column = new DataGridViewTextBoxColumn();
-                        column.CellTemplate = new DataGridViewTextBoxCell();
-                        column.Width = 8 * (int)atr.Longitud;
-                        column.Name = atr.Nombre;
-                        column.ValueType = typeof(string);
-                        c = (DataGridViewTextBoxColumn)column;
-                        c.MaxInputLength = (int)atr.Longitud;
-
-                        break;
-
-
-
-                }
-                datos_DatosEntidadDataGridView.Columns.Add(column);
-
-
-            }
-            DataGridViewColumn colposicion = new DataGridViewColumn();
-            colposicion.Name = "Posicion";
-            colposicion.Width = 70;
-            colposicion.ReadOnly = true;
-            colposicion.CellTemplate = new DataGridViewTextBoxCell();
-
-
-            DataGridViewColumn colApNext = new DataGridViewColumn();
-            colApNext.Name = "Ap_siguiente";
-            colApNext.Width = 80;
-            colApNext.ReadOnly = true;
-            colApNext.CellTemplate = new DataGridViewTextBoxCell();
-            datos_DatosEntidadDataGridView.Columns.Add(colposicion);
-            datos_DatosEntidadDataGridView.Columns.Add(colApNext);
-
-
-
-            List<DataRegister> registros = entidad.GetRegisters();
-            foreach (DataRegister registro in registros)
-            {
-
-                datos_DatosEntidadDataGridView.Rows.Add(registro.Fields());
-                datos_DatosEntidadDataGridView.Rows[datos_DatosEntidadDataGridView.Rows.Count - 2].Tag = "saved";
-            }
-
-            if (entidad.HasPrimaryKey == false)
-            {
-                Label l = new Label();
-                l.Text = "No puede insertar datos en esta entidad haste que agregue una llave primaria";
-                l.AutoSize = true;
-                l.BackColor = Color.Yellow;
-                flowLayoutPanel1.Controls.Add(l);
-                flowLayoutPanel1.Invalidate();
-                datos_DatosEntidadDataGridView.Enabled = false;
-            }
-            else
-            {
-                flowLayoutPanel1.Controls.Clear();
-                datos_DatosEntidadDataGridView.Enabled = true;
-
-            }
-
-
-
-            entidad.Katanazo();
+           
         }
 
         private void datos_DatosEntidadDataGridView_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         {
-            Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
-            DataRegister register = Util.RowToRegister(datos_DatosEntidadDataGridView.CurrentRow, entidad.Atributos);
-            
-            if (register != null)
-            {
-                if ((datos_DatosEntidadDataGridView.CurrentRow.Tag == null) || ((string)(datos_DatosEntidadDataGridView.CurrentRow.Tag) == "not saved"))
-                {
-                    if (Util.IsKeyHere(entidad.GetRegisters(), register.key) == -1)
-                    {
-                        DataGridViewRow row = datos_DatosEntidadDataGridView.CurrentRow;
-                        entidad.InsertRegister(register);
-                        currentFile.WriteEntidad(entidad.Pos, entidad);
-                       // row.Cells[row.Cells.Count - 2].Value = register.pos;
-                        //row.Cells[row.Cells.Count - 1].Value = register.next_reg;
-                        row.Tag = "saved";
-
-                    }
-                    else
-                    {
-                        MessageBox.Show("Ya existe un registro con esta clave");
-                        e.Cancel = true;
-                    }
-
-                }
-
-                else if ((string)datos_DatosEntidadDataGridView.CurrentRow.Tag == "edited")
-                {
-                    int keyPrimIndex = entidad.Atributos.FindIndex(z => z.LlavePrim == true);
-                    List<DataRegister> registers = entidad.GetRegisters();
-                    int indexOldKey = Util.IsKeyHere(registers, new DataField(EditingCellValue,true));
-                    int indexNewKey = Util.IsKeyHere(registers, register.key);
-
-                    if (indexNewKey != -1)
-                    {
-                        MessageBox.Show("Ya existe un registro con esa llave en la entidad");
-                        e.Cancel = true;
-                    }
-
-                    else if (indexOldKey != -1)
-                    {
-                        //MessageBox.Show("estas tratando de editar el registro con clave " + EditingCellValue.ToString());
-
-                        entidad.InsertEditedRegister(register, EditingCellValue);
-                        currentFile.WriteEntidad(entidad.Pos, entidad);  // <<----- DONT FORGET TO ENABLE THIS
-                    }
-                    else
-                    {
-                        MessageBox.Show("Ya existe un registro con esa clave");
-                        e.Cancel = true;
-                    }
-
-
-                }
-            }
-
           
-            entidad.Katanazo();
             
         }
 
@@ -724,17 +551,17 @@ namespace FileStruct
             foreach (DataRegister registro in registros)
             {
 
-                datos_DatosEntidadDataGridView.Rows.Add(registro.Fields());
-                datos_DatosEntidadDataGridView.Rows[datos_DatosEntidadDataGridView.Rows.Count - 2].Tag = "saved";
+                DataDGV.Rows.Add(registro.Fields());
+                DataDGV.Rows[DataDGV.Rows.Count - 2].Tag = "saved";
             }
         }
 
         private void datos_DatosEntidadDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            DataGridViewRow row= datos_DatosEntidadDataGridView.CurrentRow;
+            DataGridViewRow row= DataDGV.CurrentRow;
             Entity E = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
             EditingCellValue = row.Cells[E.Atributos.FindIndex(x => x.LlavePrim = true)].Value;
-            E.Katanazo();
+           
            
         }
 
@@ -758,10 +585,9 @@ namespace FileStruct
         private void datos_DatosEntidadDataGridView_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
-            DataGridViewRow row = datos_DatosEntidadDataGridView.Rows[e.RowIndex];
+            DataGridViewRow row = DataDGV.Rows[e.RowIndex];
             entidad.DeleteRegisterAt((Int64)row.Cells[row.Cells.Count-2].Value);
             currentFile.WriteEntidad(entidad.Pos,entidad);
-            entidad.Katanazo();
             DumpCurrentFileToScreen();
             MessageBox.Show("El registro se ha eliminado");
 
@@ -779,22 +605,273 @@ namespace FileStruct
         {
             Entity E = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
             List<DataRegister>registers=E.GetRegisters();
-            datos_DatosEntidadDataGridView.Rows.Clear();
+            DataDGV.Rows.Clear();
             foreach (DataRegister reg in registers)
             {
                 
 
-                    datos_DatosEntidadDataGridView.Rows.Add(reg.Fields());
-                    datos_DatosEntidadDataGridView.Rows[datos_DatosEntidadDataGridView.Rows.Count - 2].Tag = "saved";
+                    DataDGV.Rows.Add(reg.Fields());
+                    DataDGV.Rows[DataDGV.Rows.Count - 2].Tag = "saved";
             }
-            E.Katanazo();
+           
         }
 
         private void datos_DatosEntidadDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridViewRow row = datos_DatosEntidadDataGridView.CurrentRow;
+            DataGridViewRow row = DataDGV.CurrentRow;
             if (row.Tag == "saved")
-                datos_DatosEntidadDataGridView.CurrentRow.Tag = "edited"; 
+                DataDGV.CurrentRow.Tag = "edited"; 
+        }
+
+
+        private void InsertDataRegister()
+        {
+            Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
+            DataRegister register = Util.RowToRegister(DataDGV.CurrentRow, entidad.Atributos);
+
+            if (register != null)
+            {
+                if ((DataDGV.CurrentRow.Tag == null) || ((string)(DataDGV.CurrentRow.Tag) == "not saved"))
+                {
+                    if (Util.IsKeyHere(entidad.GetRegisters(), register.key) == -1)
+                    {
+                        DataGridViewRow row = DataDGV.CurrentRow;
+                        entidad.InsertRegister(register);
+                        currentFile.WriteEntidad(entidad.Pos, entidad);
+                        // row.Cells[row.Cells.Count - 2].Value = register.pos;
+                        //row.Cells[row.Cells.Count - 1].Value = register.next_reg;
+                        row.Tag = "saved";
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ya existe un registro con esta clave");
+                       // e.Cancel = true;
+                    }
+
+                }
+
+                else if ((string)DataDGV.CurrentRow.Tag == "edited")
+                {
+                    int keyPrimIndex = entidad.Atributos.FindIndex(z => z.LlavePrim == true);
+                    List<DataRegister> registers = entidad.GetRegisters();
+                    int indexOldKey = Util.IsKeyHere(registers, new DataField(EditingCellValue, true));
+                    int indexNewKey = Util.IsKeyHere(registers, register.key);
+
+                    if (indexNewKey != -1)
+                    {
+                        MessageBox.Show("Ya existe un registro con esa llave en la entidad");
+                       // e.Cancel = true;
+                    }
+
+                    else if (indexOldKey != -1)
+                    {
+                        //MessageBox.Show("estas tratando de editar el registro con clave " + EditingCellValue.ToString());
+
+                        entidad.InsertEditedRegister(register, EditingCellValue);
+                        currentFile.WriteEntidad(entidad.Pos, entidad);  // <<----- DONT FORGET TO ENABLE THIS
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ya existe un registro con esa clave");
+                       // e.Cancel = true;
+                    }
+
+
+                }
+            }
+
+
+
+
+        }
+
+        private void DataFill(string entityName)
+        {
+            DataDGV.Columns.Clear();
+            DataDGV.Rows.Clear();
+            Entity entidad = currentFile.FetchEntidad(entityName);
+            DataTable dataTable = new DataTable();
+
+            foreach (Attribute atr in entidad.Atributos)
+            {
+                // DataGridViewColumn column = new DataGridViewColumn();
+                //DataGridViewTextBoxColumn c = new DataGridViewTextBoxColumn();
+
+
+                DataColumn column = new DataColumn() ;
+
+                if (atr.Tipo == 'I')
+                {
+                    column = new DataColumn(atr.Nombre, typeof(int));
+                    
+                }
+                else if (atr.Tipo=='C')
+                {
+                    column = new DataColumn(atr.Nombre, typeof(char));
+                    column.MaxLength = 1;
+                }
+                else if (atr.Tipo == 'L')
+                {
+                    column = new DataColumn(atr.Nombre, typeof(long));
+                }
+                else if (atr.Tipo == 'S')
+                {
+                    column = new DataColumn(atr.Nombre, typeof(string));
+                    column.MaxLength = (int)atr.Longitud;
+                }
+                else if (atr.Tipo == 'F')
+                {
+                    column = new DataColumn(atr.Nombre, typeof(float));
+                }
+                else if (atr.Tipo == 'B')
+                {
+                    column = new DataColumn(atr.Nombre, typeof(bool));
+                }
+
+
+                //switch (atr.Tipo)
+                //{
+                //    case 'I':
+                //        //column = new DataGridViewTextBoxColumn();
+                //        // = new DataColumn(atr.Nombre,typeof(int));
+                //        column.ColumnName = atr.Nombre;
+                //       // column.CellTemplate = new DataGridViewTextBoxCell();
+                //       // column.Width = 80;
+                //        //column.Name = atr.Nombre;
+                //        //column.ValueType = typeof(int);
+                //        break;
+
+                //    case 'C':
+                //        // column = new DataGridViewTextBoxColumn();
+                //        //column.CellTemplate = new DataGridViewTextBoxCell();
+                //        //column.Width = 20;
+                //        //column.ValueType = typeof(char);
+                //        //column.Name = atr.Nombre;
+                //        //c = (DataGridViewTextBoxColumn)column;
+                //        //c.MaxInputLength = 1;
+                //        DataColumn column = new DataColumn(atr.Nombre,typeof(char));
+
+                //        break;
+
+                //    case 'L':
+                //        //column = new DataGridViewTextBoxColumn();
+                //        column.CellTemplate = new DataGridViewTextBoxCell();
+                //        column.Width = 120;
+                //        column.ValueType = typeof(long);
+                //        column.Name = atr.Nombre;
+                //        break;
+
+                //    case 'F':
+                //        //column = new DataGridViewTextBoxColumn();
+                //        column.CellTemplate = new DataGridViewTextBoxCell();
+                //        column.Width = 80;
+                //        column.ValueType = typeof(float);
+                //        column.Name = atr.Nombre;
+
+                //        break;
+
+                //    case 'B':
+                //        //column = new DataGridViewCheckBoxColumn();
+                //        column.CellTemplate = new DataGridViewCheckBoxCell();
+                //        column.Width = 60;
+                //        column.ValueType = typeof(bool);
+                //        column.Name = atr.Nombre;
+                //        break;
+
+                //    case 'S':
+                //        column = new DataGridViewTextBoxColumn();
+                //        column.CellTemplate = new DataGridViewTextBoxCell();
+                //        column.Width = 8 * (int)atr.Longitud;
+                //        column.Name = atr.Nombre;
+                //        column.ValueType = typeof(string);
+                //        c = (DataGridViewTextBoxColumn)column;
+                //        c.MaxInputLength = (int)atr.Longitud;
+
+                //        break;
+
+
+
+                //}
+                dataTable.Columns.Add(column);
+                
+
+
+            }
+
+            DataColumn colPosicion= new DataColumn("Posicion");
+            colPosicion.ReadOnly = true;
+            colPosicion.DataType = typeof(long);
+            colPosicion.DefaultValue = null;
+            dataTable.Columns.Add(colPosicion);
+          
+       
+
+            DataColumn colApNext = new DataColumn("Ap_Siguiente");
+            colApNext.ReadOnly = true;
+            colApNext.DataType = typeof(long);
+            colApNext.DefaultValue = null;
+            dataTable.Columns.Add(colApNext);
+           
+           
+            
+
+            dataTable.RowChanged += rowChanged;
+
+            // DataGridViewColumn colposicion = new DataGridViewColumn();
+            //colposicion.Name = "Posicion";
+            //colposicion.Width = 70;
+            //colposicion.ReadOnly = true;
+            //colposicion.CellTemplate = new DataGridViewTextBoxCell();
+
+
+            //DataGridViewColumn colApNext = new DataGridViewColumn();
+            //colApNext.Name = "Ap_siguiente";
+            //colApNext.Width = 80;
+            //colApNext.ReadOnly = true;
+            //colApNext.CellTemplate = new DataGridViewTextBoxCell();
+
+            //DataDGV.Columns.Add(colposicion);
+            //DataDGV.Columns.Add(colApNext);
+
+
+
+            List<DataRegister> registros = entidad.GetRegisters();
+            foreach (DataRegister registro in registros)
+            {
+
+                dataTable.Rows.Add(registro.Fields());
+
+                //dataTable.Rows[DataDGV.Rows.Count - 2].Tag = "saved";
+            }
+            DataDGV.DataSource = dataTable;
+
+            if (entidad.HasPrimaryKey == false)
+            {
+                Label l = new Label();
+                l.Text = "No puede insertar datos en esta entidad haste que agregue una llave primaria";
+                l.AutoSize = true;
+                l.BackColor = Color.Yellow;
+                flowLayoutPanel1.Controls.Add(l);
+                flowLayoutPanel1.Invalidate();
+                DataDGV.Enabled = false;
+            }
+            else
+            {
+                flowLayoutPanel1.Controls.Clear();
+                DataDGV.Enabled = true;
+
+            }
+
+        }
+
+        private void rowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            // MessageBox.Show("Rowchanged");
+            //Int64 pos = e.Row.Field<long>("Posicion");
+            //Int64 next = e.Row.Field<long>("Ap_Siguiente");
+            int r = 22;
+            InsertDataRegister();
         }
     }
 }
