@@ -9,7 +9,7 @@ namespace FileStruct
 {
     class Entity
     {
-        private char[] nombre;
+        private char[] name= new char[30];
         private Int64 posicion = 8;
         private Int64 ap_atributos = -1;
         private Int64 ap_datos = -1;
@@ -17,9 +17,11 @@ namespace FileStruct
         private List<Attribute> atributos;
         private bool hasPrimaryKey=false;
         private DictionaryFile dictionary;
+        private List<DataRegister> registers;
+        private DataFile dataFile;
 
-        public char[] NombreAsArray { get =>nombre; }
-        public string Nombre { get => new string(nombre).Trim();}
+        public char[] NombreAsArray { get =>name; }
+        public string Nombre { get => new string(name).Trim();}
         public Int64 Pos { get => posicion; set => posicion = value; }
         public Int64 ApAtr { get => ap_atributos; set => ap_atributos = value; }
         public Int64 ApData { get => ap_datos; set => ap_datos = value; }
@@ -28,12 +30,15 @@ namespace FileStruct
         public List<Attribute> Atributos { get => atributos; set => atributos = value; }
         public bool HasPrimaryKey { get => hasPrimaryKey; set => hasPrimaryKey = value; }
         public DictionaryFile Dictionary { get => dictionary; set => dictionary = value; }
+        public List<DataRegister> Registers { get => registers; }
 
-        public Entity()
+        public Entity(string name)
         {
-            nombre= new char[30];
+            this.SetName(name);
             atributos = new List<Attribute>();
-            
+            dataFile= new DataFile(Form1.projectName + "//" + this.Nombre); // This may be provitional
+           
+
         }
 
         public void SetName(string Name)
@@ -41,23 +46,24 @@ namespace FileStruct
             for (int i = 0; i < 30; i++)
             {
                 if (i < Name.Count())
-                    this.nombre[i] = Name[i];
+                    this.name[i] = Name[i];
                 else
-                    this.nombre[i] = ' ';
+                    this.name[i] = ' ';
             }
 
         }
         
         public static Entity CreateNew(string Name)
         {
-
-            Entity E = new Entity();
+            Entity E = new Entity(Name);
             E.SetName(Name);
             E.posicion= -1;
             E.ApAtr = -1;
             E.ApData = -1;
             E.ApNext = -1;
-           
+            E.dataFile = new DataFile(Form1.projectName + "//" + E.Nombre); // This may be provitional
+            E.UpdateRegisters();
+      
             return E;
         }
 
@@ -67,7 +73,7 @@ namespace FileStruct
         {
 
                 DataFile dataFile = new DataFile(Form1.projectName + "//" + this.Nombre);
-                List<DataRegister> registers = GetRegisters();
+                UpdateRegisters();
 
                 int keyPrimIndex = Atributos.IndexOf(Atributos.Find(x => x.LlavePrim == true));
 
@@ -85,21 +91,21 @@ namespace FileStruct
                     if (index == 0)
                     {
                         register.next_reg = registers[1].pos;
-                        ap_datos = dataFile.lenght;
-                        dataFile.WriteRegister(dataFile.lenght, register);
+                        ap_datos = dataFile.lenght();
+                        dataFile.WriteRegister(dataFile.lenght(), register);
                     }
                     else if (index == registers.Count - 1)
                     {
-                        registers[(int)index - 1].next_reg = dataFile.lenght;
+                        registers[(int)index - 1].next_reg = dataFile.lenght();
                         dataFile.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
-                        dataFile.WriteRegister(dataFile.lenght, register);
+                        dataFile.WriteRegister(dataFile.lenght(), register);
                     }
                     else
                     {
                         register.next_reg = registers[(int)index - 1].next_reg;
-                        registers[(int)index - 1].next_reg = dataFile.lenght;
+                        registers[(int)index - 1].next_reg = dataFile.lenght();
                         dataFile.WriteRegister(registers[(int)index - 1].pos, registers[(int)index - 1]);
-                        dataFile.WriteRegister(dataFile.lenght, register);
+                        dataFile.WriteRegister(dataFile.lenght(), register);
 
                     }
                 }
@@ -119,11 +125,11 @@ namespace FileStruct
             }
             else
             {
-                // Th key has been changed
+                // The key has been changed
 
                 DeleteRegisterAt(register.pos);
                 Dictionary.WriteEntidad(this.posicion, this);
-                List<DataRegister> registers = GetRegisters();
+                UpdateRegisters();
                 registers.Add(register);
                 registers = OrderRegistersList(registers, register.key);
                 Int64 index = Util.IsKeyHere(registers, register.key);
@@ -156,7 +162,8 @@ namespace FileStruct
 
         public void DeleteRegisterAt(Int64 pos)
         {
-            List<DataRegister> registers = GetRegisters();
+            DataFile dataFile = new DataFile(Form1.projectName + "//" + this.Nombre);
+            UpdateRegisters();
             int index = registers.FindIndex(x => x.pos == pos);
 
             if (index == 0)
@@ -182,26 +189,22 @@ namespace FileStruct
         }
 
 
-        public List<DataRegister> GetRegisters()
+        public void UpdateRegisters()
         {
-            DataFile dataFile = new DataFile(Form1.projectName + "//" + this.Nombre);
+            // DataFile dataFile = new DataFile(Form1.projectName + "//" + this.Nombre);
 
             if (ap_datos != -1)
             {
                 List<DataRegister> registers= dataFile.GetAllRegisters(this.Atributos, ap_datos);
-                dataFile.Close();
-                return registers;
+                this.registers= registers;
             }
 
 
             else
             {
-                dataFile.Close();
-                return new List<DataRegister>();
+                this.registers= new List<DataRegister>();
             }
                
-
-
            
         }
         /// <summary>

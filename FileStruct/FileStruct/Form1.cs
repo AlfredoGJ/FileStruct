@@ -547,7 +547,7 @@ namespace FileStruct
         private void UpdateData(Entity entidad)
         {
             
-            List<DataRegister> registros = entidad.GetRegisters();
+            List<DataRegister> registros = entidad.Registers;
             foreach (DataRegister registro in registros)
             {
 
@@ -604,7 +604,7 @@ namespace FileStruct
         private void UpdateData()
         {
             Entity E = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
-            List<DataRegister>registers=E.GetRegisters();
+            List<DataRegister>registers=E.Registers;
             DataDGV.Rows.Clear();
             foreach (DataRegister reg in registers)
             {
@@ -627,13 +627,15 @@ namespace FileStruct
         private void InsertDataRegister()
         {
             Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
+
+           // DataDGV.CurrentRow.
             DataRegister register = Util.RowToRegister(DataDGV.CurrentRow, entidad.Atributos);
 
             if (register != null)
             {
                 if ((DataDGV.CurrentRow.Tag == null) || ((string)(DataDGV.CurrentRow.Tag) == "not saved"))
                 {
-                    if (Util.IsKeyHere(entidad.GetRegisters(), register.key) == -1)
+                    if (Util.IsKeyHere(entidad.Registers, register.key) == -1)
                     {
                         DataGridViewRow row = DataDGV.CurrentRow;
                         entidad.InsertRegister(register);
@@ -654,7 +656,7 @@ namespace FileStruct
                 else if ((string)DataDGV.CurrentRow.Tag == "edited")
                 {
                     int keyPrimIndex = entidad.Atributos.FindIndex(z => z.LlavePrim == true);
-                    List<DataRegister> registers = entidad.GetRegisters();
+                    List<DataRegister> registers = entidad.Registers;
                     int indexOldKey = Util.IsKeyHere(registers, new DataField(EditingCellValue, true));
                     int indexNewKey = Util.IsKeyHere(registers, register.key);
 
@@ -688,17 +690,14 @@ namespace FileStruct
 
         private void DataFill(string entityName)
         {
-            DataDGV.Columns.Clear();
-            DataDGV.Rows.Clear();
+           // DataDGV.Columns.Clear();
+            //DataDGV.Rows.Clear();
             Entity entidad = currentFile.FetchEntidad(entityName);
             DataTable dataTable = new DataTable();
 
             foreach (Attribute atr in entidad.Atributos)
             {
-                // DataGridViewColumn column = new DataGridViewColumn();
-                //DataGridViewTextBoxColumn c = new DataGridViewTextBoxColumn();
-
-
+    
                 DataColumn column = new DataColumn() ;
 
                 if (atr.Tipo == 'I')
@@ -719,6 +718,7 @@ namespace FileStruct
                 {
                     column = new DataColumn(atr.Nombre, typeof(string));
                     column.MaxLength = (int)atr.Longitud;
+                    
                 }
                 else if (atr.Tipo == 'F')
                 {
@@ -729,74 +729,8 @@ namespace FileStruct
                     column = new DataColumn(atr.Nombre, typeof(bool));
                 }
 
-
-                //switch (atr.Tipo)
-                //{
-                //    case 'I':
-                //        //column = new DataGridViewTextBoxColumn();
-                //        // = new DataColumn(atr.Nombre,typeof(int));
-                //        column.ColumnName = atr.Nombre;
-                //       // column.CellTemplate = new DataGridViewTextBoxCell();
-                //       // column.Width = 80;
-                //        //column.Name = atr.Nombre;
-                //        //column.ValueType = typeof(int);
-                //        break;
-
-                //    case 'C':
-                //        // column = new DataGridViewTextBoxColumn();
-                //        //column.CellTemplate = new DataGridViewTextBoxCell();
-                //        //column.Width = 20;
-                //        //column.ValueType = typeof(char);
-                //        //column.Name = atr.Nombre;
-                //        //c = (DataGridViewTextBoxColumn)column;
-                //        //c.MaxInputLength = 1;
-                //        DataColumn column = new DataColumn(atr.Nombre,typeof(char));
-
-                //        break;
-
-                //    case 'L':
-                //        //column = new DataGridViewTextBoxColumn();
-                //        column.CellTemplate = new DataGridViewTextBoxCell();
-                //        column.Width = 120;
-                //        column.ValueType = typeof(long);
-                //        column.Name = atr.Nombre;
-                //        break;
-
-                //    case 'F':
-                //        //column = new DataGridViewTextBoxColumn();
-                //        column.CellTemplate = new DataGridViewTextBoxCell();
-                //        column.Width = 80;
-                //        column.ValueType = typeof(float);
-                //        column.Name = atr.Nombre;
-
-                //        break;
-
-                //    case 'B':
-                //        //column = new DataGridViewCheckBoxColumn();
-                //        column.CellTemplate = new DataGridViewCheckBoxCell();
-                //        column.Width = 60;
-                //        column.ValueType = typeof(bool);
-                //        column.Name = atr.Nombre;
-                //        break;
-
-                //    case 'S':
-                //        column = new DataGridViewTextBoxColumn();
-                //        column.CellTemplate = new DataGridViewTextBoxCell();
-                //        column.Width = 8 * (int)atr.Longitud;
-                //        column.Name = atr.Nombre;
-                //        column.ValueType = typeof(string);
-                //        c = (DataGridViewTextBoxColumn)column;
-                //        c.MaxInputLength = (int)atr.Longitud;
-
-                //        break;
-
-
-
-                //}
                 dataTable.Columns.Add(column);
                 
-
-
             }
 
             DataColumn colPosicion= new DataColumn("Posicion");
@@ -816,35 +750,32 @@ namespace FileStruct
            
             
 
-            dataTable.RowChanged += rowChanged;
+            
 
-            // DataGridViewColumn colposicion = new DataGridViewColumn();
-            //colposicion.Name = "Posicion";
-            //colposicion.Width = 70;
-            //colposicion.ReadOnly = true;
-            //colposicion.CellTemplate = new DataGridViewTextBoxCell();
+            List<DataRegister> registros = entidad.Registers;
 
-
-            //DataGridViewColumn colApNext = new DataGridViewColumn();
-            //colApNext.Name = "Ap_siguiente";
-            //colApNext.Width = 80;
-            //colApNext.ReadOnly = true;
-            //colApNext.CellTemplate = new DataGridViewTextBoxCell();
-
-            //DataDGV.Columns.Add(colposicion);
-            //DataDGV.Columns.Add(colApNext);
-
-
-
-            List<DataRegister> registros = entidad.GetRegisters();
             foreach (DataRegister registro in registros)
             {
-
-                dataTable.Rows.Add(registro.Fields());
-
-                //dataTable.Rows[DataDGV.Rows.Count - 2].Tag = "saved";
+                
+                DataRow row = dataTable.Rows.Add(registro.Fields());
+                
+                
+               // dataTable.Rows[DataDGV.Rows.Count - 2].Tag = "saved";
+                
             }
+           
             DataDGV.DataSource = dataTable;
+
+            for (int i = 0; i < dataTable.Columns.Count;i++)
+            {
+                if (dataTable.Columns[i].MaxLength!=-1)
+                {
+                    DataGridViewTextBoxColumn c = (DataGridViewTextBoxColumn)DataDGV.Columns[i];
+                    c.MaxInputLength = dataTable.Columns[i].MaxLength;
+                }
+                
+            }
+            
 
             if (entidad.HasPrimaryKey == false)
             {
@@ -863,15 +794,88 @@ namespace FileStruct
 
             }
 
+            dataTable.RowChanged += rowChanged;
+            dataTable.TableNewRow += helo;
+            dataTable.AcceptChanges();
+           
+        }
+
+        private void helo(object sender, DataTableNewRowEventArgs e)
+        {
+            
         }
 
         private void rowChanged(object sender, DataRowChangeEventArgs e)
         {
-            // MessageBox.Show("Rowchanged");
-            //Int64 pos = e.Row.Field<long>("Posicion");
-            //Int64 next = e.Row.Field<long>("Ap_Siguiente");
-            int r = 22;
-            InsertDataRegister();
+            Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
+            DataRegister register = Util.RowToRegister(DataDGV.CurrentRow, entidad.Atributos);
+            if (register != null)
+            {
+                switch (e.Row.RowState)
+                {
+                    case DataRowState.Modified:
+                        InsertModifiedRegister(entidad,register,e);
+                        break;
+
+                    case DataRowState.Added:
+                        InsertNewRegister(entidad,register,e);
+                        break;
+                }
+            }
+            
+           
+            //InsertDataRegister();
+           
+           
+        }
+
+        private void InsertModifiedRegister(Entity entidad,DataRegister register, DataRowChangeEventArgs e)
+        {
+
+            int keyPrimIndex = entidad.Atributos.FindIndex(z => z.LlavePrim == true);
+            List<DataRegister> registers = entidad.Registers;
+            int indexOldKey = Util.IsKeyHere(registers, new DataField(EditingCellValue, true));
+            int indexNewKey = Util.IsKeyHere(registers, register.key);
+
+            if (indexNewKey != -1)
+            {
+                MessageBox.Show("Ya existe un registro con esa llave en la entidad");
+                // e.Cancel = true;
+            }
+
+            else if (indexOldKey != -1)
+            {
+                //MessageBox.Show("estas tratando de editar el registro con clave " + EditingCellValue.ToString());
+
+                entidad.InsertEditedRegister(register, EditingCellValue);
+                currentFile.WriteEntidad(entidad.Pos, entidad);
+                e.Row.AcceptChanges();
+            }
+            else
+            {
+                MessageBox.Show("Ya existe un registro con esa clave");
+                // e.Cancel = true;
+                
+            }
+        }
+
+        private void InsertNewRegister(Entity entidad, DataRegister register, DataRowChangeEventArgs e)
+        {
+
+            if (Util.IsKeyHere(entidad.Registers, register.key) == -1)
+            {
+                DataGridViewRow row = DataDGV.CurrentRow;
+                entidad.InsertRegister(register);
+                currentFile.WriteEntidad(entidad.Pos, entidad);
+
+                e.Row.AcceptChanges();
+                
+            }
+            else
+            {
+                MessageBox.Show("Ya existe un registro con esta clave");
+                
+            }
         }
     }
 }

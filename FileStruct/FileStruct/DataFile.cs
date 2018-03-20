@@ -13,18 +13,25 @@ namespace FileStruct
         string filePath;
         FileStream stream;
         
-        public Int64 lenght { get => stream.Length; }
+        public Int64 lenght()
+        {
+            Open();
+            Int64 l = stream.Length;
+            Close();
+            return l;
+        }
 
         public DataFile(string filepath)
         {
             filePath = filepath;
-            stream = File.Open(filepath,FileMode.OpenOrCreate);
             
         }
 
         public void WriteRegister(Int64 pos, DataRegister register)
 
         {
+            Open();
+
             BinaryWriter writer = new BinaryWriter(stream);
             writer.Seek((int)pos, SeekOrigin.Begin);
 
@@ -43,10 +50,11 @@ namespace FileStruct
                 else if (field.value.GetType() == typeof(long))
                     writer.Write((long)field.value);
             }
-            writer.Write(register.next_reg);
+            
             register.pos = pos;
-
-
+            writer.Write(register.pos);
+            writer.Write(register.next_reg);
+            Close();
         }
 
         public DataRegister ReadRegister(Int64 pos,List<Attribute> template )
@@ -88,7 +96,7 @@ namespace FileStruct
             }
 
             register = new DataRegister(fields);
-            register.pos = pos;
+            register.pos = reader.ReadInt64();
             register.next_reg = reader.ReadInt64();
             register.keyprim = template.FindIndex(x => x.LlavePrim==true);
             
@@ -97,6 +105,7 @@ namespace FileStruct
 
         public  List<DataRegister> GetAllRegisters(List<Attribute> template, Int64 begin)
         {
+            Open();
             BinaryReader reader = new BinaryReader(stream);
             List<DataRegister> registers= new List<DataRegister>();
             DataRegister register = this.ReadRegister(begin,template);
@@ -108,12 +117,18 @@ namespace FileStruct
                 register = this.ReadRegister(register.next_reg, template);
                 registers.Add(register);
             }
+            Close();
             return registers;
         }
 
         public void Close()
         {
             stream.Close();
+        }
+
+        public void Open()
+        {
+            stream = File.Open(filePath, FileMode.OpenOrCreate);
         }
 
     }

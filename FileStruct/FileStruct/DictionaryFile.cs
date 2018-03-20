@@ -81,10 +81,6 @@ namespace FileStruct
                         
 
 
-                       
-
-
-
                     }
 
                   
@@ -220,15 +216,20 @@ namespace FileStruct
         
         private  Entity FetchEntidad(FileStream Stream,Int64 Pos)
         {
-            Entity E = new Entity();           
+                       
             Stream.Seek(Pos, SeekOrigin.Begin);                
             BinaryReader Reader = new BinaryReader(Stream);
-            E.SetName( new string(Reader.ReadChars(30)));
+
+            Entity E = new Entity(new string(Reader.ReadChars(30)));
             E.Pos = Reader.ReadInt64();
             E.ApAtr = Reader.ReadInt64();
             E.ApData = Reader.ReadInt64();
             E.ApNext = Reader.ReadInt64();
             FindAtributos(Stream, E);
+            E.UpdateRegisters();
+            
+           
+           
 
             return E;
         }
@@ -278,6 +279,7 @@ namespace FileStruct
                 E.ApNext = Reader.ReadInt64();
                 FindAtributos(stream, E);
                 E.Dictionary = this;
+                E.UpdateRegisters();
                 return E;
             }
             else
