@@ -184,8 +184,8 @@ namespace FileStruct
                 registers[index - 1].next_reg = registers[index + 1].pos;
                 WriteRegister(registers[index - 1]);
             }
-                   
 
+            UpdateRegisters();
         }
 
 
