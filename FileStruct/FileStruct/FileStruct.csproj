@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attribute.cs" />
+    <Compile Include="AttributeManager.cs" />
     <Compile Include="DataField.cs" />
     <Compile Include="DataFile.cs" />
     <Compile Include="DataRegister.cs" />

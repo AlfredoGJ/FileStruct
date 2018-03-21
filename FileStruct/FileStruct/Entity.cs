@@ -80,7 +80,7 @@ namespace FileStruct
                 if (registers.Count == 0)
                 {
                     dataFile.WriteRegister(0, register);
-                    ApData = 0;
+                    ApData = 0 ;
                 }
                 else
                 {
@@ -109,8 +109,8 @@ namespace FileStruct
 
                     }
                 }
-                dataFile.Close();  
-            
+                dataFile.Close();
+                UpdateRegisters();
         }
 
         public void InsertEditedRegister(DataRegister register, object previouskey)

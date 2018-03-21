@@ -21,6 +21,11 @@ namespace FileStruct
         private string EditingCellName;
         private object EditingCellValue;
         public static string projectName;
+
+        private AttributeManager attributeManager;
+
+        private string entityOnAttrEdit;
+
         public Form1()
         {
             typeschar.Add('I', typeof(int));
@@ -224,7 +229,7 @@ namespace FileStruct
 
         private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
         {
-
+            entityOnAttrEdit = comboBox1.SelectedItem.ToString();
             EnableEntidadEditing();
 
             if (comboBox1.SelectedItem != null)
@@ -270,7 +275,8 @@ namespace FileStruct
 
         private void button5_Click(object sender, EventArgs e)
         {
-            Int64 entidadPos = currentFile.FindEntidad(comboBox1.SelectedItem.ToString());
+
+            Int64 entidadPos = currentFile.FindEntidad(entityOnAttrEdit);
             Entity E = currentFile.FetchEntidad(entidadPos);
             Attribute AtrAux = new Attribute();
 
@@ -846,6 +852,7 @@ namespace FileStruct
                 entidad.InsertEditedRegister(register, register.key);
                 currentFile.WriteEntidad(entidad.Pos, entidad);
                 e.Row.AcceptChanges();
+                DumpCurrentFileToScreen();
             }
 
             else
@@ -860,6 +867,7 @@ namespace FileStruct
                     entidad.InsertEditedRegister(register, EditingCellValue);
                     currentFile.WriteEntidad(entidad.Pos, entidad);
                     e.Row.AcceptChanges();
+                    DumpCurrentFileToScreen();
                 }
 
                
@@ -877,7 +885,7 @@ namespace FileStruct
                 currentFile.WriteEntidad(entidad.Pos, entidad);
 
                 e.Row.AcceptChanges();
-                
+                DumpCurrentFileToScreen();
             }
             else
             {
