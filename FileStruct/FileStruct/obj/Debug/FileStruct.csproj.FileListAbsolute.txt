@@ -18,3 +18,4 @@ C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.c
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csproj.CoreCompileInputs.cache
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.exe
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.pdb
+C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.Inicio.resources

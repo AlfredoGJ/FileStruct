@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace FileStruct
 {
-    class DictionaryFile
+    public class DictionaryFile
     {
         private bool isOpen;
         private Int64 lenght;

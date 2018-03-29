@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace FileStruct
 {
-    class DataFile
+    public class DataFile
     {
         string filePath;
         FileStream stream;

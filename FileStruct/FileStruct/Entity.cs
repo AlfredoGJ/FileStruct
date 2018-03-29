@@ -7,7 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 namespace FileStruct
 {
-    class Entity
+    public class Entity
     {
         private char[] name= new char[30];
         private Int64 posicion = 8;

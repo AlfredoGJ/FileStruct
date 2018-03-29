@@ -26,8 +26,10 @@ namespace FileStruct
 
         private string entityOnAttrEdit;
 
-        public Form1()
+        public Form1(DictionaryFile file)
         {
+            currentFile =file;
+
             typeschar.Add('I', typeof(int));
             typeschar.Add('S', typeof(string));
             typeschar.Add('F', typeof(Single));
@@ -37,7 +39,7 @@ namespace FileStruct
 
 
             InitializeComponent();
-            button5.Enabled = false;
+           
 
             Entidades_DGV.Columns.Add("Nombre", "Nombre");
             Entidades_DGV.Columns.Add("Posicion", "Posicion");
@@ -57,7 +59,7 @@ namespace FileStruct
             Entidades_DGV.Columns[3].Width = 70;
             Entidades_DGV.Columns[4].Width = 70;
 
-            DisableFileManipulation();
+
         }
         private void EnableFileManipulation()
         {
@@ -74,43 +76,9 @@ namespace FileStruct
         }
 
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(textBox2.Text))
-            {
-                OpenFile();
-                EnableFileManipulation();
-                DumpCurrentFileToScreen();
+       
 
-            }
-
-        }
-
-        private void OpenFile()
-        {
-
-            if (Directory.Exists(Directory.GetCurrentDirectory() + "\\" + textBox2.Text))
-            {
-                projectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
-                //CurreentFileName = ProjectName+ "\\Diccionario.bin";
-                currentFile = new DictionaryFile(projectName);
-                DumpCurrentFileToScreen();
-
-            }
-
-            else
-            {
-                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + textBox2.Text);
-                projectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
-                //CurreentFileName = ProjectName + "\\Diccionario.bin";
-                currentFile = new DictionaryFile(projectName);
-
-
-
-            }
-
-
-        }
+        
 
 
         private void DumpCurrentFileToScreen()
@@ -148,20 +116,7 @@ namespace FileStruct
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog Dialog = new FolderBrowserDialog();
-            if (Dialog.ShowDialog() == DialogResult.OK)
-            {
-                Directory.SetCurrentDirectory(Dialog.SelectedPath);
-                DisableFileManipulation();
-                Entidades_DGV.Rows.Clear();
-                currentFile = null;
-                projectName = string.Empty;
-                textBox2.Text = "";
-
-            }
-        }
+       
         private long getEnd(string FileName)
         {
             FileStream Stream = File.OpenRead(FileName);

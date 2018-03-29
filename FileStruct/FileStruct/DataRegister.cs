@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileStruct
 {
-    class DataRegister
+    public class DataRegister
     {
         public List<Tuple<char, object>> DataFields;
         public List<DataField> fields;

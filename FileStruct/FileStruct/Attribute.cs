@@ -9,7 +9,7 @@ namespace FileStruct
 {
     public enum AtributeType {Int,Float,String,Char,Long};
     
-    class Attribute
+   public class Attribute
     {
         private string charTypes = "IFSCL";
 

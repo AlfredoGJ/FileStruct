@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileStruct
 {
-    class DataField
+    public class DataField
     {
         public object value;
         public bool isPrimaryKey;
