@@ -26,10 +26,9 @@ namespace FileStruct
 
         private string entityOnAttrEdit;
 
-        public Form1(DictionaryFile file)
+        public Form1(DictionaryFile file,string projectname)
         {
-            currentFile =file;
-
+        
             typeschar.Add('I', typeof(int));
             typeschar.Add('S', typeof(string));
             typeschar.Add('F', typeof(Single));
@@ -37,30 +36,38 @@ namespace FileStruct
             typeschar.Add('L', typeof(long));
             typeschar.Add('B', typeof(bool));
 
-
-            InitializeComponent();
+            projectName = projectname;
+            currentFile = file;
            
 
-            Entidades_DGV.Columns.Add("Nombre", "Nombre");
-            Entidades_DGV.Columns.Add("Posicion", "Posicion");
-            Entidades_DGV.Columns.Add("ap_atributos", "ap_atributos");
-            Entidades_DGV.Columns.Add("ap_datos", "ap_datos");
-            Entidades_DGV.Columns.Add("ap_siguiente_entidad", "ap_siguiente_entidad");
-            Entidades_DGV.MultiSelect = false;
-            Entidades_DGV.Columns[0].ReadOnly = false;
-            Entidades_DGV.Columns[1].ReadOnly = true;
-            Entidades_DGV.Columns[2].ReadOnly = true;
-            Entidades_DGV.Columns[3].ReadOnly = true;
-            Entidades_DGV.Columns[4].ReadOnly = true;
-
-            Entidades_DGV.Columns[0].Width = 100;
-            Entidades_DGV.Columns[1].Width = 70;
-            Entidades_DGV.Columns[2].Width = 70;
-            Entidades_DGV.Columns[3].Width = 70;
-            Entidades_DGV.Columns[4].Width = 70;
+            InitializeComponent();
+            //Entidades_DGV.CellValueChanged -= dataGridView1_CellValueChanged;
+            //Entidades_DGV.CellValueChanged += dataGridView1_CellValueChanged;
 
 
+
+            //Entidades_DGV.Columns.Add("Nombre", "Nombre");
+            //Entidades_DGV.Columns.Add("Posicion", "Posicion");
+            //Entidades_DGV.Columns.Add("ap_atributos", "ap_atributos");
+            //Entidades_DGV.Columns.Add("ap_datos", "ap_datos");
+            //Entidades_DGV.Columns.Add("ap_siguiente_entidad", "ap_siguiente_entidad");
+            //Entidades_DGV.MultiSelect = false;
+            //Entidades_DGV.Columns[0].ReadOnly = false;
+            //Entidades_DGV.Columns[1].ReadOnly = true;
+            //Entidades_DGV.Columns[2].ReadOnly = true;
+            //Entidades_DGV.Columns[3].ReadOnly = true;
+            //Entidades_DGV.Columns[4].ReadOnly = true;
+
+            //Entidades_DGV.Columns[0].Width = 100;
+            //Entidades_DGV.Columns[1].Width = 70;
+            //Entidades_DGV.Columns[2].Width = 70;
+            //Entidades_DGV.Columns[3].Width = 70;
+            //Entidades_DGV.Columns[4].Width = 70;
+
+
+            UpdateEntities();
         }
+
         private void EnableFileManipulation()
         {
             button1.Enabled = true;
@@ -81,22 +88,22 @@ namespace FileStruct
         
 
 
-        private void DumpCurrentFileToScreen()
+        private void UpdateEntities()
         {
             Entidades_DGV.Rows.Clear();
-            comboBox1.Items.Clear();
-            datos_EntidadesComboBox.Items.Clear();
+            Atributos_CBox1.Items.Clear();
+            Datos_CBox.Items.Clear();
             List<object[]> Entidades = currentFile.ReadEntidades();
             foreach (object[] o in Entidades)
             {
                 Entidades_DGV.Rows.Add(o);
-                comboBox1.Items.Add(o[0]);
-                datos_EntidadesComboBox.Items.Add(o[0]);
+                Atributos_CBox1.Items.Add(o[0]);
+                Datos_CBox.Items.Add(o[0]);
             }
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void AddEntity(object sender, EventArgs e)
         {
             if ((!string.IsNullOrEmpty(textBox1.Text)) && (currentFile != null))
             {
@@ -111,7 +118,7 @@ namespace FileStruct
                 }
 
 
-                DumpCurrentFileToScreen();
+                UpdateEntities();
 
             }
         }
@@ -127,29 +134,31 @@ namespace FileStruct
 
 
 
-        private void button4_Click(object sender, EventArgs e)
+        private void DeleteEntity(object sender, EventArgs e)
         {
-            currentFile.DeleteEntidad(Entidades_DGV.SelectedRows[0].Cells[0].Value.ToString());
-            Entidades_DGV.Rows.Clear();
-            DumpCurrentFileToScreen();
+            currentFile.DeleteEntidad(Entidades_DGV.SelectedRows[0].Cells[0].Value.ToString());            
+            UpdateEntities();
 
         }
 
 
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void Entidades_DGV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-
-            if (currentFile.FindEntidad(Entidades_DGV.Rows[e.RowIndex].Cells[0].Value.ToString()) == -1)
+            if (e.RowIndex != -1)
             {
-                currentFile.EditEntidad(EditingCellName, Entidades_DGV.Rows[e.RowIndex].Cells[0].Value.ToString());
-                DumpCurrentFileToScreen();
-            }
+                if (currentFile.FindEntidad(Entidades_DGV.Rows[e.RowIndex].Cells[0].Value.ToString()) == -1)
+                {
+                    currentFile.EditEntidad(EditingCellName, Entidades_DGV.Rows[e.RowIndex].Cells[0].Value.ToString());
+                    UpdateEntities();
+                }
 
-            else
-            {
-                MessageBox.Show("El nombre de la entidad Ya existe");
-                Entidades_DGV.Rows[e.RowIndex].Cells[0].Value = EditingCellName;
+                else
+                {
+                    MessageBox.Show("El nombre de la entidad Ya existe");
+                    Entidades_DGV.Rows[e.RowIndex].Cells[0].Value = EditingCellName;
+                }
             }
+          
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -171,9 +180,9 @@ namespace FileStruct
             //CurreentFileName = string.Empty;
             DisableFileManipulation();
             Entidades_DGV.Rows.Clear();
-            comboBox1.Items.Clear();
+            Atributos_CBox1.Items.Clear();
             Atributos_DGV.Rows.Clear();
-            datos_EntidadesComboBox.Items.Clear();
+            Datos_CBox.Items.Clear();
 
         }
 
@@ -184,14 +193,14 @@ namespace FileStruct
 
         private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
         {
-            entityOnAttrEdit = comboBox1.SelectedItem.ToString();
+            entityOnAttrEdit = Atributos_CBox1.SelectedItem.ToString();
             EnableEntidadEditing();
 
-            if (comboBox1.SelectedItem != null)
+            if (Atributos_CBox1.SelectedItem != null)
             {
                 Atributos_DGV.Rows.Clear();
-                button5.Enabled = true;
-                Int64 entidadPos = currentFile.FindEntidad(comboBox1.SelectedItem.ToString());
+                Atributos_Btn.Enabled = true;
+                Int64 entidadPos = currentFile.FindEntidad(Atributos_CBox1.SelectedItem.ToString());
                 Entity E = currentFile.FetchEntidad(entidadPos);
                 foreach (Attribute a in E.Atributos)
                 {
@@ -209,10 +218,10 @@ namespace FileStruct
         private void DisableEntidadEditing()
         {
             checkBox1.Enabled = false;
-            textBox3.Enabled = false;
-            comboBox2.Enabled = false;
-            textBox4.Enabled = false;
-            button5.Enabled = false;
+            Atributos_TBox.Enabled = false;
+            Atributos_CBox2.Enabled = false;
+            Atributos_TBox2.Enabled = false;
+            Atributos_Btn.Enabled = false;
             Atributos_DGV.Enabled = false;
 
         }
@@ -220,10 +229,10 @@ namespace FileStruct
         private void EnableEntidadEditing()
         {
             checkBox1.Enabled = true;
-            textBox3.Enabled = true;
-            comboBox2.Enabled = true;
-            textBox4.Enabled = true;
-            button5.Enabled = true;
+            Atributos_TBox.Enabled = true;
+            Atributos_CBox2.Enabled = true;
+            Atributos_TBox2.Enabled = true;
+            Atributos_Btn.Enabled = true;
             Atributos_DGV.Enabled = true;
 
         }
@@ -236,12 +245,12 @@ namespace FileStruct
             Attribute AtrAux = new Attribute();
 
 
-            if ((!string.IsNullOrEmpty(textBox3.Text)) && (comboBox2.SelectedItem != null) && (!string.IsNullOrEmpty(textBox4.Text)))
+            if ((!string.IsNullOrEmpty(Atributos_TBox.Text)) && (Atributos_CBox2.SelectedItem != null) && (!string.IsNullOrEmpty(Atributos_TBox2.Text)))
             {
 
-                AtrAux.SetName(textBox3.Text);
-                AtrAux.SetType(comboBox2.SelectedIndex);
-                int.TryParse(textBox4.Text, out int longitud);
+                AtrAux.SetName(Atributos_TBox.Text);
+                AtrAux.SetType(Atributos_CBox2.SelectedIndex);
+                int.TryParse(Atributos_TBox2.Text, out int longitud);
                 AtrAux.Longitud = longitud;
                 AtrAux.LlavePrim = checkBox1.Checked;
 
@@ -257,10 +266,10 @@ namespace FileStruct
                             object[] reg = { a.LlavePrim, a.Nombre, dataGridViewComboBoxColumn1.Items[a.TipoNumber], a.Longitud, a.Posicion, a.ApNextAtr };
                             Atributos_DGV.Rows.Add(reg);
                         }
-                        DumpCurrentFileToScreen();
+                        UpdateEntities();
                     }
                     else
-                        MessageBox.Show("La entidad ya contiene un atributo co el nombre " + textBox3.Text);
+                        MessageBox.Show("La entidad ya contiene un atributo co el nombre " + Atributos_TBox.Text);
                 }
                 else
                     MessageBox.Show("Ya existe una llave primaria en la entidad " + E.Nombre);
@@ -273,29 +282,29 @@ namespace FileStruct
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (comboBox2.SelectedIndex)
+            switch (Atributos_CBox2.SelectedIndex)
             {
-                case 0: textBox4.Text = "4";
-                    textBox4.Enabled = false;
+                case 0: Atributos_TBox2.Text = "4";
+                    Atributos_TBox2.Enabled = false;
                     break;
 
                 case 1:
-                    textBox4.Text = "4";
-                    textBox4.Enabled = false;
+                    Atributos_TBox2.Text = "4";
+                    Atributos_TBox2.Enabled = false;
                     break;
 
                 case 3:
-                    textBox4.Text = "1";
-                    textBox4.Enabled = false;
+                    Atributos_TBox2.Text = "1";
+                    Atributos_TBox2.Enabled = false;
                     break;
 
                 case 4:
-                    textBox4.Text = "8";
-                    textBox4.Enabled = false;
+                    Atributos_TBox2.Text = "8";
+                    Atributos_TBox2.Enabled = false;
                     break;
                 case 2:
-                    textBox4.Clear();
-                    textBox4.Enabled = true;
+                    Atributos_TBox2.Clear();
+                    Atributos_TBox2.Enabled = true;
                     break;
             }
         }
@@ -315,7 +324,7 @@ namespace FileStruct
 
         private void button6_Click(object sender, EventArgs e)
         {
-            Int64 entidadPos = currentFile.FindEntidad(comboBox1.Text);
+            Int64 entidadPos = currentFile.FindEntidad(Atributos_CBox1.Text);
             Entity E = currentFile.FetchEntidad(entidadPos);
             currentFile.DeleteAtributo(E, Atributos_DGV.SelectedRows[0].Cells[1].Value.ToString());
             Atributos_DGV.Rows.Clear();
@@ -345,7 +354,7 @@ namespace FileStruct
 
         private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            Int64 entidadPos = currentFile.FindEntidad(comboBox1.Text);
+            Int64 entidadPos = currentFile.FindEntidad(Atributos_CBox1.Text);
             Entity E = currentFile.FetchEntidad(entidadPos);
             int colIndex = Atributos_DGV.CurrentCell.ColumnIndex;
             int rowIndex = Atributos_DGV.CurrentCell.RowIndex;
@@ -436,7 +445,7 @@ namespace FileStruct
             if (Atributos_DGV.CurrentRow != null && e.ColumnIndex == 0)
             {
                 // MessageBox.Show(e.RowIndex+"  "+e.ColumnIndex+ dataGridView2.CurrentRow.Cells[e.ColumnIndex].Value.ToString());
-                Int64 entidadPos = currentFile.FindEntidad(comboBox1.Text);
+                Int64 entidadPos = currentFile.FindEntidad(Atributos_CBox1.Text);
                 Entity E = currentFile.FetchEntidad(entidadPos);
                 string atrName = Atributos_DGV.CurrentRow.Cells[1].Value.ToString();
 
@@ -494,7 +503,7 @@ namespace FileStruct
         private void datos_EntidadesComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             
-            DataFill(datos_EntidadesComboBox.Text);
+            DataFill(Datos_CBox.Text);
 
            
         }
@@ -528,7 +537,7 @@ namespace FileStruct
         private void datos_DatosEntidadDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             DataGridViewRow row= DataDGV.CurrentRow;
-            Entity E = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
+            Entity E = currentFile.FetchEntidad(Datos_CBox.Text);
             EditingCellValue = row.Cells[E.Atributos.FindIndex(x => x.LlavePrim = true)].Value;
            
            
@@ -547,20 +556,20 @@ namespace FileStruct
 
         private void datos_DatosEntidadDataGridView_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
-            Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
+            Entity entidad = currentFile.FetchEntidad(Datos_CBox.Text);
             UpdateData(entidad);
         }
 
         private void datos_DatosEntidadDataGridView_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
+            Entity entidad = currentFile.FetchEntidad(Datos_CBox.Text);
             DataGridViewRow row = DataDGV.Rows[e.RowIndex];
             entidad.DeleteRegisterAt((Int64)row.Cells[row.Cells.Count - 2].Value);
             currentFile.WriteEntidad(entidad.Pos, entidad);
             DataTable table = (DataTable)DataDGV.DataSource;
            
             UpdateData(entidad);
-            DumpCurrentFileToScreen();
+            UpdateEntities();
             MessageBox.Show("El registro se ha eliminado");
             
 
@@ -586,7 +595,7 @@ namespace FileStruct
 
         private void InsertDataRegister()
         {
-            Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
+            Entity entidad = currentFile.FetchEntidad(Datos_CBox.Text);
 
            // DataDGV.CurrentRow.
             DataRegister register = Util.RowToRegister(DataDGV.CurrentRow, entidad.Atributos);
@@ -768,7 +777,7 @@ namespace FileStruct
 
         private void rowChanged(object sender, DataRowChangeEventArgs e)
         {
-            Entity entidad = currentFile.FetchEntidad(datos_EntidadesComboBox.Text);
+            Entity entidad = currentFile.FetchEntidad(Datos_CBox.Text);
             DataRegister register = Util.RowToRegister(DataDGV.CurrentRow, entidad.Atributos);
             if (register != null)
             {
@@ -807,7 +816,7 @@ namespace FileStruct
                 entidad.InsertEditedRegister(register, register.key);
                 currentFile.WriteEntidad(entidad.Pos, entidad);
                 e.Row.AcceptChanges();
-                DumpCurrentFileToScreen();
+                UpdateEntities();
             }
 
             else
@@ -822,7 +831,7 @@ namespace FileStruct
                     entidad.InsertEditedRegister(register, EditingCellValue);
                     currentFile.WriteEntidad(entidad.Pos, entidad);
                     e.Row.AcceptChanges();
-                    DumpCurrentFileToScreen();
+                    UpdateEntities();
                 }
 
                
@@ -840,13 +849,18 @@ namespace FileStruct
                 currentFile.WriteEntidad(entidad.Pos, entidad);
 
                 e.Row.AcceptChanges();
-                DumpCurrentFileToScreen();
+                UpdateEntities();
             }
             else
             {
                 MessageBox.Show("Ya existe un registro con esta clave");
                 
             }
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

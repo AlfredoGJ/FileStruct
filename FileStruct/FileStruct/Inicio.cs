@@ -60,10 +60,9 @@ namespace FileStruct
             if (Directory.Exists(Directory.GetCurrentDirectory() + "\\" + textBox2.Text))
             {
                 currentProjectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
-                //CurreentFileName = ProjectName+ "\\Diccionario.bin";
-                DictionaryFile currentFile = new DictionaryFile(currentProjectName); //send to form 1
+                DictionaryFile currentFile = new DictionaryFile(currentProjectName); 
 
-                Form1 form = new Form1(currentFile);
+                Form1 form = new Form1(currentFile,currentProjectName);
                 form.Show();
 
             }
@@ -72,9 +71,8 @@ namespace FileStruct
             {
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + textBox2.Text);
                 currentProjectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
-                //CurreentFileName = ProjectName + "\\Diccionario.bin";
-                DictionaryFile  currentFile = new DictionaryFile(currentProjectName); //send to form 1
-                Form1 form = new Form1(currentFile);
+                DictionaryFile  currentFile = new DictionaryFile(currentProjectName); 
+                Form1 form = new Form1(currentFile,currentProjectName);
                 form.Show();
             }
         }

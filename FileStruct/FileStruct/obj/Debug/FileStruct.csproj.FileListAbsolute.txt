@@ -11,7 +11,6 @@ C:\Users\Letvaio\Desktop\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.c
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.exe.config
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.exe
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.pdb
-C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csprojResolveAssemblyReference.cache
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.Form1.resources
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.Properties.Resources.resources
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csproj.GenerateResource.Cache
@@ -19,3 +18,4 @@ C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.c
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.exe
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.pdb
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.Inicio.resources
+C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csprojResolveAssemblyReference.cache
