@@ -51,6 +51,7 @@ namespace FileStruct
             return -1;
         }
 
+
         /// <summary>
         /// Converts a DataGridView Row into a DataRegister  
         /// </summary>
@@ -84,6 +85,7 @@ namespace FileStruct
             }
 
             DataRegister register = new DataRegister(fields);
+
             if (row.Cells[row.Cells.Count - 2].Value != DBNull.Value )
             {
                 register.pos = (Int64)row.Cells[row.Cells.Count - 2].Value;
