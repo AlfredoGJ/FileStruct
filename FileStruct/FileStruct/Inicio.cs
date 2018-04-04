@@ -62,8 +62,9 @@ namespace FileStruct
                 currentProjectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
                 DictionaryFile currentFile = new DictionaryFile(currentProjectName); 
 
-                Form1 form = new Form1(currentFile,currentProjectName);
+                Form1 form = new Form1(currentFile,currentProjectName,this);
                 form.Show();
+                this.Hide();
 
             }
 
@@ -72,8 +73,9 @@ namespace FileStruct
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + textBox2.Text);
                 currentProjectName = Directory.GetCurrentDirectory() + "\\" + textBox2.Text;
                 DictionaryFile  currentFile = new DictionaryFile(currentProjectName); 
-                Form1 form = new Form1(currentFile,currentProjectName);
+                Form1 form = new Form1(currentFile,currentProjectName,this);
                 form.Show();
+                this.Hide();
             }
         }
 

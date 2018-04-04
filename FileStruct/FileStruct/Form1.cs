@@ -21,29 +21,30 @@ namespace FileStruct
         private string EditingCellName;
         private object EditingCellValue;
         public static string projectName;
-
-        private AttributeManager attributeManager;
+        private Inicio inicio;
 
         private string entityOnAttrEdit;
 
-        public Form1(DictionaryFile file,string projectname)
+        public Form1(DictionaryFile file,string projectname, Inicio inicio)
         {
-        
-            typeschar.Add('I', typeof(int));
-            typeschar.Add('S', typeof(string));
-            typeschar.Add('F', typeof(Single));
-            typeschar.Add('C', typeof(char));
-            typeschar.Add('L', typeof(long));
-            typeschar.Add('B', typeof(bool));
+           
+            this.inicio = inicio;
+            //typeschar.Add('I', typeof(int));
+            //typeschar.Add('S', typeof(string));
+            //typeschar.Add('F', typeof(Single));
+            //typeschar.Add('C', typeof(char));
+            //typeschar.Add('L', typeof(long));
+            //typeschar.Add('B', typeof(bool));
 
             projectName = projectname;
             currentFile = file;
            
 
             InitializeComponent();
-           
-            
-            
+
+            label10.Text = projectname;
+            label11.Text = "Secuencial Indexada";
+
             UpdateEntities();
             UpdateAvailableEntities();
         }
@@ -933,6 +934,12 @@ namespace FileStruct
                 }
             }
             
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            currentFile.Close();
+            this.inicio.Show();
         }
     }
 }
