@@ -79,8 +79,9 @@ namespace FileStruct
 
                 if (registers.Count == 0)
                 {
-                    dataFile.WriteRegister(0, register);
-                    ApData = 0 ;
+                    ApData = dataFile.lenght();
+                    dataFile.WriteRegister(dataFile.lenght(), register);
+                   
                 }
                 else
                 {

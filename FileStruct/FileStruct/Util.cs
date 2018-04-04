@@ -88,8 +88,9 @@ namespace FileStruct
 
             if (row.Cells[row.Cells.Count - 2].Value != DBNull.Value )
             {
-                register.pos = (Int64)row.Cells[row.Cells.Count - 2].Value;
-                register.next_reg = (Int64)row.Cells[row.Cells.Count - 1].Value;
+                
+                register.pos = (Int64)row.Cells[row.Cells.Count - 3].Value;
+                register.next_reg = (Int64)row.Cells[row.Cells.Count - 2].Value;
             }
                
             return register;

@@ -127,18 +127,33 @@ namespace FileStruct
 
 
 
-        private void DeleteEntity(object sender, EventArgs e)
+        private void DeleteEntity(string entityname)
         {
-            string entityname = Entidades_DGV.SelectedRows[0].Cells[0].Value.ToString();
             currentFile.DeleteEntidad(entityname);
+
+            string Cbox1Text = Atributos_CBox1.Text;
+            string DatosCboxText = Datos_CBox.Text;
             UpdateEntities();
             UpdateAvailableEntities();
 
-            if (Atributos_CBox1.Text == entityname)
+           
+
+            if ( Cbox1Text== entityname)
             {
-                Atributos_CBox1.Text = "";
                 Atributos_DGV.Rows.Clear();
             }
+            else
+            {
+                Atributos_CBox1.Text = Cbox1Text;
+            }
+
+            if (DatosCboxText == entityname)
+                DataDGV.Columns.Clear();
+            else
+            {
+                Datos_CBox.Text=DatosCboxText;
+            }
+
             
 
         }
@@ -516,7 +531,15 @@ namespace FileStruct
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == Entidades_DGV.Columns.Count - 1)
-                DeleteEntity(new object(),new EventArgs());
+            {
+                string entityname = Entidades_DGV.SelectedRows[0].Cells[0].Value.ToString();
+                Entity E = currentFile.FetchEntidad(entityname);
+
+                if (E.Registers.Count > 0)
+                    MessageBox.Show("No puede eliminar entidades que tengan registros");
+                else
+                    DeleteEntity(entityname);
+            }
 
         }
 
@@ -696,6 +719,7 @@ namespace FileStruct
                 {
                     column = new DataColumn(atr.Nombre, typeof(char));
                     column.MaxLength = 1;
+                   
 
                 }
                 else if (atr.Tipo == 'L')
@@ -791,8 +815,7 @@ namespace FileStruct
             dataTable.AcceptChanges();
             dataTable.RowChanged += rowChanged;
             dataTable.TableNewRow += helo;
-           
-           
+            
         }
 
         private void helo(object sender, DataTableNewRowEventArgs e)
@@ -818,12 +841,7 @@ namespace FileStruct
                 }
                 UpdateData(entidad);
             }
-
-            
-           
-          
-           
-           
+ 
         }
 
         private void InsertModifiedRegister(Entity entidad,DataRegister register, DataRowChangeEventArgs e)
@@ -892,6 +910,29 @@ namespace FileStruct
         {
             if (e.ColumnIndex == DataDGV.Columns.Count - 1 && DataDGV.Rows.Count > e.RowIndex )
                 DeleteRegister(e.RowIndex);
+        }
+
+        private void DataDGV_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
+
+      
+
+       
+
+        private void DataDGV_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            
+            DataGridViewCell cell = DataDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            if (cell.IsInEditMode)
+            {
+                if (cell.ValueType == typeof(string) || cell.ValueType == typeof(char))
+                {
+                    cell.Value = cell.Value.ToString().ToLower();
+                }
+            }
+            
         }
     }
 }

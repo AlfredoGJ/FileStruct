@@ -601,6 +601,7 @@
             this.DataDGV.TabIndex = 3;
             this.DataDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.datos_DatosEntidadDataGridView_CellBeginEdit);
             this.DataDGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataDGV_CellContentClick);
+            this.DataDGV.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataDGV_CellValidated);
             this.DataDGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.datos_DatosEntidadDataGridView_CellValueChanged);
             // 
             // label8
