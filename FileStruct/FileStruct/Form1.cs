@@ -43,7 +43,7 @@ namespace FileStruct
             InitializeComponent();
 
             label10.Text = projectname;
-            label11.Text = "Secuencial Indexada";
+            label11.Text = "Secuencial Ordenada";
 
             UpdateEntities();
             UpdateAvailableEntities();
@@ -66,6 +66,9 @@ namespace FileStruct
 
         private void UpdateAvailableEntities()
         {
+            string ACBox = Atributos_CBox1.Text;
+            string DCBox = Datos_CBox.Text;
+
             Atributos_CBox1.Items.Clear();
             Datos_CBox.Items.Clear();
 
@@ -76,6 +79,12 @@ namespace FileStruct
                 Atributos_CBox1.Items.Add(o[0]);
                 Datos_CBox.Items.Add(o[0]);
             }
+
+            if (Atributos_CBox1.Items.Contains(ACBox))
+                Atributos_CBox1.Text = ACBox;
+
+            if (Datos_CBox.Items.Contains(DCBox))
+                Datos_CBox.Text = DCBox;
 
         }
 
@@ -474,7 +483,10 @@ namespace FileStruct
         {
 
             if (e.ColumnIndex == Atributos_DGV.Columns.Count - 1)
-                DeleteAtrubute(new object(),new EventArgs());
+            {               
+                 DeleteAtrubute(new object(), new EventArgs());
+            }
+                
 
             if (Atributos_DGV.CurrentRow != null && e.ColumnIndex == 0)
             {
@@ -610,7 +622,12 @@ namespace FileStruct
 
                 UpdateData(entidad);
                 UpdateEntities();
+                if (entidad.Registers.Count==0 && Atributos_CBox1.Text==entidad.Nombre)//TODO AGREGAR CONDICION DE QUE SEA LA ENTIDAD DE LA QUE SE ELIMINO REGISTRO
+                {
+                    EnableEntidadEditing();
+                }
                 MessageBox.Show("El registro se ha eliminado");
+                
             }
             
             
@@ -894,6 +911,8 @@ namespace FileStruct
 
                 e.Row.AcceptChanges();
                 UpdateEntities();
+
+                DisableEntidadEditing();
             }
             else
             {
