@@ -18,3 +18,13 @@ C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.c
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csproj.CoreCompileInputs.cache
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.exe
 C:\Users\josal\Documents\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.pdb
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.exe.config
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.exe
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\bin\Debug\FileStruct.pdb
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csprojAssemblyReference.cache
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.Form1.resources
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.Properties.Resources.resources
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csproj.GenerateResource.cache
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.csproj.CoreCompileInputs.cache
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.exe
+C:\Users\josal\Documents\Estructuras-Archivos-Antiguo\FileStruct\FileStruct\FileStruct\obj\Debug\FileStruct.pdb
